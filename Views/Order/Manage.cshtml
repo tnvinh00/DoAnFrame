@@ -1,0 +1,177 @@
+﻿@model IEnumerable<Sky.Models.Order>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    int i = 0;
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+}
+
+<h2 class="text-center mt-5 mb-4">
+    <i class="fas fa-tasks fa-lg mr-2"></i>
+    Quản lí đơn hàng
+</h2>
+
+<div class="card shadow mb-3">
+    <div class="card-body d-flex py-2">
+        <div class="flex-grow-1 d-inline-flex form-inline">
+            <div class="form-group m-2">
+                <label>Lọc theo</label>
+            </div>
+            <input hidden value="@ViewData["Status"]" />
+            <div class="form-group m-2">
+                <div class="dropdown">
+                    <a class="btn border" role="button" id="dropSort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Lọc theo
+                        <i class="fas fa-sort ml-1"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-sort m-0" aria-labelledby="dropSort">
+                        <a class="dropdown-item" asp-action="Manage"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-status="dang-cho">Đang chờ xác nhận</a>
+                        <a class="dropdown-item" asp-action="Manage"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-status="da-xac-nhan">Đã xác nhận</a>
+                        <a class="dropdown-item" asp-action="Manage"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-status="dang-giao">Đang giao</a>
+                        <a class="dropdown-item" asp-action="Manage"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-status="da-giao">Đã giao</a>
+                        <a class="dropdown-item" asp-action="Manage"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-status="da-huy">Đã hủy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group m-2">
+                <a class="btn btn-success" asp-action="Manage">Xem tất cả</a>
+            </div>
+        </div>
+        <div class="p-0">
+            <form asp-action="Manage" method="get" class="form-inline ">
+                <div class="form-group m-2">
+                    <label class="input-group-prepend">Tìm kiếm </label>
+                </div>
+                <div class="form-group m-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table dataTable" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="text-center">
+                        <th>STT</th>
+                        <th>
+                            Mã đơn hàng
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+                            Tình trạng
+                        </th>
+                        <th>
+                            Ngày đặt hàng
+                        </th>
+                        <th>
+                            Tổng tiền
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-center">
+                            <td class="align-middle">
+                                @(i+1)
+                            </td>
+                            <td class="align-middle">
+                                <small>@Html.DisplayFor(modelItem => item.OrderTextId)</small>
+                            </td>
+                            <td class="align-middle">
+                                @*<img src="@("~/image/" + ViewBag.ListImg[i])" asp-append-version="true" style="height:150px" class="rounded" />*@
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.OrderStatus)
+                            </td>
+                            <td class="align-middle">
+                                @((item.OrderDate).ToString("dd/MM/yyyy HH:mm"))
+                            </td>
+                            <td class="align-middle">
+                                <strong>@((item.OrderPrice).ToString("#,##0", culture))</strong>
+                            </td>
+                            <td class="align-middle">
+                                <a onclick="showInPopup('@Url.Action("Edit", "Order", new { id = item.OrderId}, Context.Request.Scheme)', 'Edit Order')"
+                                   class="btn btn-sm btn-primary text-white">Sửa</a>
+                                <a onclick="showInPopup('@Url.Action("Details", "Order", new { id = item.OrderId}, Context.Request.Scheme)', 'Detail Order')"
+                                   class="btn btn-sm btn-success text-white">Xem</a>
+                                <a onclick="showInPopup('@Url.Action("Delete", "Order", new { id = item.OrderId}, Context.Request.Scheme)', 'Delete Order')"
+                                   class="btn btn-sm btn-danger text-white">Xóa</a>
+                                <a onclick="showInPopup('@Url.Action("ChiTiet", "OrderDetail", new { id = item.OrderId}, Context.Request.Scheme)', 'ChiTiet Order')"
+                                   class="btn btn-sm btn-info text-white">Chi Tiết</a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p class="h4 my-5 text-center">
+    @ViewData["Mess"]
+</p>
+
+@section Scripts{ 
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ kết quả mỗi trang",
+                    "zeroRecords": "Không tìm thấy",
+                    "info": "Hiển thị (_START_ - _END_) trong _TOTAL_ kết quả",
+                    "infoEmpty": "Không có kết quả tìm kiếm",
+                    "infoFiltered": "(Lọc _MAX_ trong tất cả kết quả)",
+                    "search": "Tìm kiếm: ",
+                    "paginate": {
+                        "previous": "Trang trước",
+                        "next": "Trang kế"
+                    }
+                }
+            });
+        });
+
+    </script>
+}

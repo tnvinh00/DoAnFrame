@@ -1,0 +1,211 @@
+﻿@model IEnumerable<Sky.Models.Product>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+}
+
+<div class="d-inline my-3">
+    <div class="mt-5 mb-2">
+        <i class="fas fa-home"></i> /
+        <a asp-action="Index" asp-controller="Home">Trang chủ</a> /
+        <a asp-action="Nam" asp-controller="Product">Nam</a> /
+        <label class="m-0">@ViewData["Type"]</label>
+    </div>
+</div>
+
+<div class="d-inline-flex my-3">
+    @foreach (var type in ViewBag.ListType)
+    {
+        <a class="btn btn-light border border-left-primary rounded mx-3 py-1 px-4" asp-action="Nam" asp-route-type="@type"> @type </a>
+    }
+</div>
+
+<div class="card shadow mb-3">
+    <div class="card-body d-flex py-2">
+        <div class="flex-grow-1 d-inline-flex form-inline">
+            <div class="form-group m-2">
+                <label>Sắp xếp theo</label>
+            </div>
+
+            <div class="form-group m-2">
+                <div class="dropdown">
+                    <a class="btn border" role="button" id="dropSort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sắp xếp theo
+                        <i class="fas fa-sort ml-1"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-sort m-0" aria-labelledby="dropSort">
+                        <a class="dropdown-item" asp-action="Nam" asp-route-sortOrder="price" asp-route-PageNumber="@ViewData["PageNumber"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-type="@ViewData["Type"]">Giá tăng dần</a>
+                        <a class="dropdown-item" asp-action="Nam" asp-route-sortOrder="price-asc" asp-route-PageNumber="@ViewData["PageNumber"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-type="@ViewData["Type"]">Giá giảm dần</a>
+                        <a class="dropdown-item" asp-action="Nam" asp-route-sortOrder="view" asp-route-PageNumber="@ViewData["PageNumber"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-type="@ViewData["Type"]">Xem nhiều nhất</a>
+                        <a class="dropdown-item" asp-action="Nam" asp-route-sortOrder="new" asp-route-PageNumber="@ViewData["PageNumber"]"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-type="@ViewData["Type"]">Mới nhất</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="p-0">
+            <form asp-action="Nam" method="get" class="form-inline ">
+                <div class="form-group m-2">
+                    <label class="input-group-prepend">Tìm kiếm </label>
+                </div>
+                <div class="form-group m-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex my-3">
+    <input hidden value="@ViewData["Type"]" />
+    <div class="flex-grow-1 d-inline-flex align-items-center">
+        <span class="pb-2">Bộ lọc: </span>
+        <h5 class="mx-2"><span class="badge badge-success p-2">@ViewData["Type"]</span></h5>
+        <h5 class="mx-2"><span class="badge badge-success p-2">@ViewData["Sort"]</span></h5>
+    </div>
+    <div>
+        <h5><a class="btn badge badge-danger p-2" asp-action="Nam"> Xóa bộ lọc</a></h5>
+    </div>
+</div>
+
+<div class="row product">
+    @foreach (var item in Model)
+    {
+        @*<div class="product-item d-block col-lg-3 col-md-4 col-sm-6 col-xs-6 px-2">
+                <div class="border d-block my-2 rounded-lg">
+                    <div class="product-thum w-auto overflow-hidden">
+                        <a asp-action="ChiTiet" asp-route-id="@item.ProductId">
+                            <img src="@("~/image/"+item.ProductImage)" asp-append-version="true" class="img-fluid product-image rounded-top" alt="ProductImage"
+                                 style="height:300px; width:300px">
+                        </a>
+                    </div>
+                    <div class="product-info p-2">
+                        <div class="product-name text-center my-2">
+                            <a class="text-decoration-none text-truncate d-block" data-toggle="tooltip" data-placement="top" title="@Html.DisplayFor(modelItem => item.ProductName)">
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="product-price flex-grow-1 p-0">
+                                @{
+                                    if (item.PreviousPrice == 0)
+                                    {
+                                        <strong class="text-dark text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                    }
+                                    else
+                                    {
+                                        <strong class="text-danger text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                        <del class="text-xs text-dark"> @(item.PreviousPrice.ToString("#,##0", culture))</del>
+                                    }
+                                }
+                            </div>
+                            <div>
+                                <a onclick="addItem('@Url.Action("AddtoFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to Favorite')"
+                                   class="btn btn-sm px-2">
+                                    <i class="fas fa-lg fa-heart cart"></i>
+                                </a>
+                            </div>
+                            <div>
+                                <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')"
+                                   class="btn btn-sm btn-sm px-2">
+                                    <i class="fas fa-lg fa-cart-plus cart"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        <div class="product-item d-block col-lg-3 col-md-4 col-sm-6 col-xs-6 px-2">
+            <div class="border d-block my-2 rounded-lg">
+                <div class="product-thum w-auto overflow-hidden">
+                    <a asp-controller="Product" asp-action="ChiTiet" asp-route-id="@item.ProductId">
+                        <img src="@("~/image/"+item.ProductImage)" asp-append-version="true" class="img-fluid product-image rounded-top" alt="ProductImage"
+                             style="height:300px; width:300px" data-toggle="tooltip" data-placement="top" title="@Html.DisplayFor(modelItem => item.ProductName)">
+                    </a>
+                </div>
+                <div class="product-info p-2">
+                    <div class="product-name text-center mt-2">
+                        <span class="h6 d-inline-block text-dark text-truncate" data-toggle="tooltip" style="max-width:200px"
+                              data-placement="top" title="@Html.DisplayFor(modelItem => item.ProductName)">
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="product-price p-0">
+                            @{
+                                if (item.PreviousPrice == 0)
+                                {
+                                    <strong class="text-dark text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                }
+                                else
+                                {
+                                    <strong class="text-danger text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                    <del class="text-xs text-dark"> @(item.PreviousPrice.ToString("#,##0", culture))</del>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center my-2">
+                        <a id="aaa" onclick="addItem('@Url.Action("AddtoFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to Favorite')"
+                           class="btn btn-circle btn-outline-danger mr-1 icon-cart" style="font-size:20px"
+                           data-toggle="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích">
+                            <i class="fas fa-heart icon-cart"></i>
+                        </a>
+                        <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')"
+                           class="btn btn-circle btn-outline-primary ml-1 icon-cart" style="font-size:20px"
+                           data-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
+                            <i class="fas fa-cart-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<p class="h4 text-center mt-5">
+    @ViewBag.Message
+</p>
+
+
+
+
+
+@section Scripts {
+    <script>
+        $("document").ready(function () {
+
+        });
+    </script>
+}
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Action("Nam", new { pageNumber = _pagenumber });
+    };
+
+    var datapaging = new
+    {
+        currentPage = (int)ViewData["PageNumber"],
+        currentSort = (int)ViewData["PageNumber"],
+        countPages = (int)ViewData["TotalPages"],
+        generateUrl = generateUrl
+    };
+
+}
+<partial name="_PagingPartial" model="@datapaging" />

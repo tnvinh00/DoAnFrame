@@ -1,0 +1,145 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Sky.Models
+@inject SignInManager<SkyUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    string activePage = System.IO.Path.GetFileNameWithoutExtension(ViewContext.ActionDescriptor.DisplayName);
+    Func<string, string, string> ActiveClass = (string activePage, string page) =>
+    {
+        return (activePage == page) ? "active" : "";
+    };
+}
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+       asp-page="/Admin/Admin" asp-area="Identity">
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-paw rotate-15"></i>
+            Meow
+        </div>
+        <div class="sidebar-brand-text mx-3"></div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Heading -->
+    <div class="sidebar-heading mt-2">
+        Quản lý user
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserManage" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-users"></i>
+            <span>Quản lý người dùng</span>
+        </a>
+        <div id="collapseUserManage" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Chức năng</h6>
+                <a class="collapse-item" asp-area="Identity" asp-page="/Admin/User/UserManager">Danh sách tài khoản</a>
+                <a class="collapse-item" asp-area="Identity" asp-page="/Account/Manage/Email">Mở khóa tài khoản</a>
+                <a class="collapse-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Xác nhận tài khoản</a>
+            </div>
+        </div>
+    </li>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePhanquyen" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-user-cog"></i>
+            <span>Phân quyền</span>
+        </a>
+        <div id="collapsePhanquyen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item @ActiveClass(activePage, "Role")" asp-area="Identity" asp-page="/Admin/Role/Role">Quản lí Role</a>
+                <a class="collapse-item @ActiveClass(activePage, "User")" asp-area="Identity" asp-page="/Admin/Role/User">Gán Role (phân quyền)</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Heading -->
+    <div class="sidebar-heading mt-2">
+        Quản lý website
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-images"></i>
+            <span>QL Panel</span>
+        </a>
+        <div id="collapsePanel" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" asp-page="/Admin/Carousel" asp-area="Identity" ><i class="fas fa-list"></i> Carousel</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-tshirt"></i>
+            <span>QL Sản phẩm</span>
+        </a>
+        <div id="collapseProduct" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" asp-controller="Product" asp-area="" asp-action="Index"><i class="fas fa-tshirt"></i> Sản phẩm</a>
+                <a class="collapse-item" asp-controller="Category" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Danh mục SP</a>
+                <a class="collapse-item" asp-controller="Type" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Loại SP</a>
+                <a class="collapse-item" asp-controller="Product" asp-area="" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm mới SP</a>
+
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-shopping-bag"></i>
+            <span>QL Đơn hàng</span>
+        </a>
+        <div id="collapseOrder" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="Manage"><i class="fas fa-list"></i> DS đơn hàng</a>
+                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="AcceptOrder"><i class="fas fa-check-circle"></i> Duyệt đơn hàng mới</a>
+                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="DeleteOrderCancel"><i class="fas fa-trash"></i> Xóa ĐH đã hủy</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePost" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-newspaper"></i>
+            <span>QL Bài đăng</span>
+        </a>
+        <div id="collapsePost" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" asp-controller="Category" asp-area="Admin"><i class="fas fa-list"></i> Danh sách</a>
+                <a class="collapse-item" asp-controller="Post" asp-area="Admin" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm bài viết</a>
+
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStatis" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-chart-bar"></i>
+            <span>Thống kê</span>
+        </a>
+        <div id="collapseStatis" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" asp-controller="Report" asp-area="" asp-action="Index"><i class="fas fa-chart-bar"></i> Doanh thu</a>
+                <a class="collapse-item" asp-controller="Post" asp-area="Admin" asp-action="Index"><i class="fas fa-list"></i> Sản phẩm</a>
+
+            </div>
+        </div>
+    </li>
+
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+</ul>
+<!-- End of Sidebar -->

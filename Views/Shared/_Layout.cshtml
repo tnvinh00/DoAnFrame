@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Meow</title>
+    <link rel="icon" href="~/logo/logo-mini.png" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <link href="~/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="~/sbadmin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+</head>
+<body id="page-top">
+    <header>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow fixed-top mb-3 topbar">
+            <button class="navbar-toggler btn btn-circle" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <div class="sidebar-brand-icon">
+                    <img src="~/logo/Logo-brand.png" style="height: 40px" />
+                </div>
+            </a>
+
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse bg-white" id="navbarNav">
+
+
+                <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-inline-block d-lg-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Search -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                            <form class="form-inline ml-auto w-100 navbar-search" asp-controller="Product" asp-action="Search" method="GET">
+                                <div class="input-group w-100">
+                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm ..." name="q"
+                                           aria-label="Search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <partial name="~/Views/Shared/_LoginPartial.cshtml" />
+
+                </ul>
+                <!-- Topbar Search -->
+                <form class="d-none d-lg-inline form-inline ml-auto mr-sm-5 my-2 my-md-0 mw-100 navbar-search" asp-controller="Product" asp-action="Search" method="GET">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm ..." name="q"
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item d-block">
+                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nam">Nam</a>
+                    </li>
+                    <li class="nav-item d-block">
+                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nu">Nữ</a>
+                    </li>
+                    <li class="nav-item dropdown" id="menu_partial">
+                        <a class="nav-link dropdown-toggle text-dark px-4" href="#" data-toggle="dropdown" aria-expanded="true"
+                           onclick="showMenu('@Url.Action("Menu", "Home", null, Context.Request.Scheme)')">Khác</a>
+                        <ul class="dropdown-menu dropdown-menu-left shadow show-menu menu-drop">
+                            <!--Menu danh mục-->
+                        </ul>
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+        </nav>
+        <nav class="navbar navbar-expand-sm mb-4 nav-hide">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <div class="sidebar-brand-icon">
+                    <img src="~/logo/Logo.png" style="height: 32px" />
+                </div>
+            </a>
+        </nav>
+
+    </header>
+    <div class="container mb-5">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!--Logout Confirm-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Đăng xuất?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Bạn có muốn đăng xuất không?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <form id="logoutForm" class="" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button id="logout" type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loaderbody hide" id="loaderbody">
+        <div class="loader"></div>
+    </div>
+
+    @*<footer class="footer footer bg-white border-top">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; 2020 Your Website 2020</span>
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </div>
+        </footer>*@
+
+    <footer class="bg-light border-top shadow pt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 d-flex justify-content-center">
+                    <img src="~/logo/logo-lg.png" style="height:180px" class="img-fluid animated1" alt="Logo">
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="left-aligned">
+                                <br>
+                                <h4 style="font-weight: bold;">THÔNG TIN</h4>
+                                <ul class="list-unstyled">
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="https://www.facebook.com/pagenaylacuameow">Fanpage</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Giới thiệu về Meow.vn</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Điều khoản và điều kiện</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Chính sách bảo mật</a></li>
+                                </ul>
+                                <br>
+                                <h4 style="font-weight: bold;">Đặt hàng</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">0965 363 248</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="left-aligned">
+                                <br>
+                                <h4 style="font-weight: bold;">FAQ</h4>
+                                <ul class="list-unstyled">
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Chính sách bán hàng</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Chính sách đổi trả</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Chính sách bảo hành</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2">
+                                        <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                    </li>
+                                </ul>
+                                <br>
+                                <h4 style="font-weight: bold;">Vận chuyển</h4>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <img src="~/logo/Img/ghtk.png" style="height:30px" alt="GHTK">
+                                    </li>
+                                    <li>
+                                        <img src="~/logo/Img/ghn.png" style="height:20px" alt="GHN">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="left-aligned">
+                                <br>
+                                <h4 style="font-weight: bold;">CSKH</h4>
+                                <ul class="list-unstyled">
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Liên hệ với chúng tôi</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Hướng dẫn</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Gửi yêu cầu hỗ trợ</a></li>
+                                    <li class="list-group-item bg-light border-0 p-0 mb-2"><a href="#">Các câu hỏi thường gặp</a></li>
+                                </ul>
+                                <br>
+                                <h4 style="font-weight: bold;">Thanh Toán</h4>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <img src="~/logo/Img/momo.jpg" style="height:30px" alt="Momo">
+                                        <img src="~/logo/Img/air-pay.png" style="height:25px" alt="Airpay">
+                                    </li>
+                                    <li>
+                                        <img src="~/logo/Img/cod1.png" style="height:40px" alt="COD">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-4">
+                            <br>
+                            <h4 style="font-weight: bold;">Kết nối với chúng tôi</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item bg-light border-0 p-0 mb-2">
+                                    <a href="mailto:tnvinh99@gmail.com?subject=Feedback" target="_blank"><i class="fas fa-envelope mr-1"></i> Gmail</a>
+                                </li>
+                                <li class="list-group-item bg-light border-0 p-0 mb-2">
+                                    <a href="https://github.com/tnvinh00" target="_blank"><i class="fab fa-github mr-1"></i> Github</a>
+                                </li>
+                                <li class="list-group-item bg-light border-0 p-0 mb-2">
+                                    <a href="https://www.facebook.com/vinhtn00/" target="_blank"><i class="fab fa-facebook mr-1"></i> Facebook</a>
+                                </li>
+                                <li class="list-group-item bg-light border-0 p-0 mb-2">
+                                    <a href="https://www.youtube.com/channel/UCniiEUTChagvtxB8iyfZMmA" target="_blank"><i class="fab fa-youtube mr-1"></i> YouTube</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <hr style="background: rgb(100, 100, 100); margin: 10px 100px; height: 0.01em;">
+            <div class="row text-center">
+                <div class="col-sm-2">
+                    <p style="font-size: 12px;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Việt Nam
+                    </p>
+                </div>
+                <div class="col-sm-3">
+                    <p style="font-size: 12px;">
+                        <i class="far fa-copyright"></i>
+                        2020 - Bản quyền của Meow.vn
+                    </p>
+                </div>
+                <div class="col-sm-5">
+                    <p style="font-size: 12px;">
+                        Địa chỉ: Trường ĐH CNTT - ĐHQG TP.Hồ Chí Minh, Thủ Đức, TP Hồ Chí Minh
+                    </p>
+                </div>
+                <div class="col-sm-2">
+                    <a href="tel:0965363248">
+                        <p style="font-size: 12px;">SĐT: 08 383 888 33</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a class="scroll-to-top rounded" href="#page-top" style="display: none;">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <partial name="~/Views/Shared/_AdminPartial.cshtml" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
+    <script src="~/js/bootstrap-notify.min.js"></script>
+    <script src="~/swiper/swiper-bundle.min.js"></script>
+
+
+    <script src="~/sbadmin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

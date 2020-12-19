@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Sky.Models.Product>
+@using System.Globalization
+
+@{
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+    Layout = "~/Views/Shared/_Layout3.cshtml";
+    //Layout = null;
+}
+<div class="container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            @foreach (var item in Model)
+            {
+                <div class="swiper-slide">
+                    <div class="product-item d-block">
+                        <div class="border d-block my-2 rounded-lg" style="height:100%">
+                            <div class="product-thum w-auto overflow-hidden" style="height:70%">
+                                <a asp-controller="Product" asp-action="ChiTiet" asp-route-id="@item.ProductId">
+                                    <img src="@("~/image/"+item.ProductImage)" asp-append-version="true" class="img-fluid product-image rounded-top" alt="ProductImage"
+                                         style="height:300px; width:300px" data-toggle="tooltip" data-placement="top" title="@Html.DisplayFor(modelItem => item.ProductName)">
+                                </a>
+                            </div>
+                            <div class="product-info p-2" style="height:30%">
+                                <div class="product-name text-center mt-2">
+                                    <span class="h6 d-inline-block text-dark text-truncate" data-toggle="tooltip" style="max-width:200px"
+                                        data-placement="top" title="@Html.DisplayFor(modelItem => item.ProductName)">
+                                        @Html.DisplayFor(modelItem => item.ProductName)
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="product-price flex-grow-1 p-0">
+                                        @{
+                                            if (item.PreviousPrice == 0)
+                                            {
+                                                <strong class="text-dark text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong class="text-danger text-lg"> @(item.ProductPrice.ToString("#,##0", culture))</strong>
+                                                <del class="text-xs text-dark"> @(item.PreviousPrice.ToString("#,##0", culture))</del>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="my-2">
+                                    <a id="aaa" onclick="addItem('@Url.Action("AddtoFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to Favorite')"
+                                       class="btn btn-circle btn-outline-danger icon-cart" style="font-size:20px"
+                                       data-toggle="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích">
+                                        <i class="fas fa-heart icon-cart"></i>
+                                    </a>
+                                    <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')"
+                                       class="btn btn-circle btn-outline-primary icon-cart" style="font-size:20px"
+                                       data-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <!-- Add Pagination -->
+        @*<div class="swiper-pagination"></div>*@
+        <!-- Add Arrows -->
+
+    </div>
+</div>
+<div class="swiper-button-next"></div>
+<div class="swiper-button-prev"></div>
+
+@section Scripts{
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 2,
+            spaceBetween: 5,
+            freeMode: true,
+
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: true,
+            },
+
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 10,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                },
+            }
+        });
+
+    </script>
+}

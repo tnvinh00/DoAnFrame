@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+    int id = ViewBag.Id;
+}
+
+<p class="">
+    @ViewData["Mess"]
+</p>
+
+@*<a onclick="CancelOrder('@Url.Action("CancelOrderConfirmed", "Order", new { id = id}, Context.Request.Scheme)')"
+   class="btn btn-danger text-white">Hủy</a>*@
+<a asp-action="CancelOrderConfirmed" asp-route-id="@id"
+   class="btn btn-danger text-white">Hủy</a>

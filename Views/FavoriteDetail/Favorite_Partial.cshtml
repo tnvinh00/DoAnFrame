@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Sky.Models.FavoriteDetail>
+
+@{
+    //Layout = "~/Views/Shared/_Layout3.cshtml";
+    Layout = null;
+}
+
+<div class="dropdown-item text-center">
+    @ViewData["FavoriteCount"]
+</div>
+
+@foreach (var item in Model)
+{
+    <a class="dropdown-item d-flex align-items-center">
+        <div class="dropdown-list-image mr-3">
+            <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" class="rounded-circle" />
+            <div class="status-indicator bg-success"></div>
+        </div>
+        <div>
+            <div class="text-truncate">
+                Am I a good boy? The reason I ask is because someone
+                told me that people say this to all dogs, even if they aren't good...
+            </div>
+            <div class="small text-gray-500">Chicken the Dog · 2w</div>
+        </div>
+    </a>
+}
+
+<div class="text-center">
+    @ViewData["More"]
+</div>

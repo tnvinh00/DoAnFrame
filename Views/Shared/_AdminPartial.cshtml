@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Sky.Areas.Identity.Data
+
+@inject UserManager<SkyUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var isAdmin = currentUser != null && (await UserManager.IsInRoleAsync(currentUser, "Admin") || await UserManager.IsInRoleAsync(currentUser, "Manager"));
+
+    if (isAdmin)
+    {
+        <div class="position-fixed d-block" style="bottom: 80px; right: 20px;">
+            <a asp-page="/Admin/Admin" asp-area="Identity" class="btn btn-primary">
+                <i class="fas fa-hand-point-right"></i> Đi tới trang Admin
+            </a>
+        </div>
+    }
+    else
+    {
+    }
+
+}

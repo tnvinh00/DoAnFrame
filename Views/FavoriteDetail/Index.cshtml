@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Sky.Models.FavoriteDetail>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Favorite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Favorite.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductDescription)
+            </td>
+            <td>
+                <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')" class="btn btn-sm btn-info text-white">Add to Cart</a>
+                <a id="@("product" +@item.ProductId)" onclick="DeleteItem('@Url.Action("DeleteItemFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Delete Item', @item.ProductId)"
+                   class="btn btn-sm btn-danger text-white">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

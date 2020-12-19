@@ -1,0 +1,93 @@
+﻿@page "/admin/"
+@model Sky.Areas.Identity.Pages.Admin.AdminModel
+@{
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    ViewData["Title"] = "Admin";
+}
+
+<p class="text-center h3 my-5">Đây là trang quản lý của Meow</p>
+
+<div class="d-flex justify-content-center">
+    <div class="col-xl-4 col-lg-5 mt-2">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Thống kê User</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-pie pt-4">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+                    <canvas id="myPieChart" width="357" height="316" class="chartjs-render-monitor" style="display: block; height: 253px; width: 286px;"></canvas>
+                </div>
+                <hr>
+                <span>Phân bố user trên website</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+        var arr_data = [ @Model.percent[0], @Model.percent[1], @Model.percent[2], @Model.percent[3] ];
+        var arr_label = [];
+
+        arr_label[0] = '@Model.lable[0]';
+        arr_label[1] = '@Model.lable[1]';
+        arr_label[2] = '@Model.lable[2]';
+        arr_label[3] = '@Model.lable[3]';
+
+        var sum = @ViewData["sum"];
+
+        for (var i = 0; i < 4; i++) {
+            arr_data[i] = ((arr_data[i] / sum) * 100).toFixed(0);
+        }
+
+       // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Pie Chart Example
+        var ctx = document.getElementById("myPieChart");
+        var myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: arr_label,
+                datasets: [{
+                    data: arr_data,
+                    backgroundColor: ['#4e73df', '#8b8b8b', '#36b9cc','#1cc88a'],
+                    hoverBackgroundColor: ['#2e59d9', '#686868', '#2c9faf', '#17a673'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
+    </script>
+}

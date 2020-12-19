@@ -1,0 +1,28 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h2>Xác nhận Email</h2>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+    <p>
+        Đăng ký tài khoản thành công, chúng tôi đã gửi một email xác nhận tới email của bạn, vui lòng kiểm tra và xác nhận email đăng ký.
+        <br>
+        (Kiểm tra mục spam nếu không tìm thấy email)
+        @*<a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>*@
+        <br>
+        <br>
+        <a asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập ngay</a>
+    </p>
+    }
+    else
+    {
+    <p>
+        Please check your email to confirm your account.
+    </p>
+    }
+}

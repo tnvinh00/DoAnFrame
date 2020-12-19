@@ -1,0 +1,145 @@
+﻿@model IEnumerable<Sky.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+}
+
+<h2>Quản lí sản phẩm</h2>
+
+<p>
+    <a onclick="showInPopup('@Url.Action("Create", "Product", null, Context.Request.Scheme)', 'Thêm sản phẩm mới')" class="btn btn-secondary text-white">Thêm sản phẩm</a>
+</p>
+<form asp-action="Index" method="get" class="form-inline ">
+    <div class="form-group m-2">
+        <label class="input-group-prepend">Find by name: </label>
+    </div>
+    <div class="form-group m-2">
+        <div class="input-group">
+            <input type="text" class="form-control" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group m-2">
+        <a asp-action="Index" class="btn btn-success">Xem tất cả</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            <th>
+                <a class="text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["ProductNameSort"]">
+                    @Html.DisplayNameFor(model => model.ProductName)
+                    <i class="fas fa-sort"></i>
+                </a>
+
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ViewCount)
+            </th>
+            <th>
+                <a class="text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["ProductDateSort"]">
+                    @Html.DisplayNameFor(model => model.ProductDate) 
+                    <i class="fas fa-sort"></i>
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@("~/image/"+item.ProductImage)" asp-append-version="true" style="height: 100px; width:80px" class="rounded" />
+                </td>
+                <td class="align-middle" data-toggle="tooltip" data-placement="right" title="@item.ProductName">
+                    <span class="d-inline-block text-truncate" style="max-width:200px">
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </span>
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.ViewCount)
+                </td>
+                <td class="align-middle">
+                    @((item.ProductDate).ToString("dd/MM/yyyy HH:mm"))
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Type.TypeName)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td class="align-middle">
+                    <a onclick="showInPopup('@Url.Action("Edit", "Product", new { id = item.ProductId}, Context.Request.Scheme)', 'Edit Product')" 
+                       class="btn btn-sm btn-primary text-white"><i class="fas fa-edit"></i>
+                    </a>
+                    <a onclick="showInPopup('@Url.Action("Details", "Product", new { id = item.ProductId}, Context.Request.Scheme)', 'Details Product')"
+                       class="btn btn-sm btn-success text-white"><i class="fas fa-info-circle"></i>
+                    </a>
+                    <a onclick="showInPopup('@Url.Action("Delete", "Product", new { id = item.ProductId}, Context.Request.Scheme)', 'Delete Product')" 
+                       class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p class="h4 text-center mt-5">
+    @ViewBag.Message
+</p>
+
+<div class="modal" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Action("Index", new { pageNumber = _pagenumber });
+    };
+
+    var datapaging = new
+    {
+        currentPage = (int)ViewData["PageNumber"],
+        countPages = (int)ViewData["TotalPages"],
+        generateUrl = generateUrl
+    };
+
+}
+<partial name="_PagingPartial" model="@datapaging" />

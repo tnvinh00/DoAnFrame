@@ -1,0 +1,76 @@
+﻿@model Sky.Models.Order
+@using System.Globalization
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+}
+
+<h4>Thông tin đơn hàng <strong>@Model.OrderTextId</strong></h4>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-3">
+            Tên người nhận
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.ReciverName)
+        </dd>
+        <dt class = "col-sm-3">
+            Địa chỉ người nhận
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.ReciverAddress)
+        </dd>
+        <dt class = "col-sm-3">
+            SĐT người nhận
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.ReciverPhone)
+        </dd>
+        <dt class = "col-sm-3">
+            Email
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.ReciverEmail)
+        </dd>
+        <dt class = "col-sm-3">
+            Mã đơn hàng
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.OrderTextId)
+        </dd>
+        <dt class = "col-sm-3">
+            Trạng thái
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.OrderStatus)
+        </dd>
+        <dt class = "col-sm-3">
+            Khóa chỉnh sửa
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.OrderLock)
+        </dd>
+        <dt class = "col-sm-3">
+            Ghi chú
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.OrderNote)
+        </dd>
+        <dt class = "col-sm-3">
+            Ngày đặt hàng
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class = "col-sm-3">
+            Tổng tiền
+        </dt>
+        <dd class = "col-sm-9">
+            @((Model.OrderPrice).ToString("#,##0", culture))
+        </dd>
+    </dl>
+</div>
+

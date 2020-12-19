@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.ViewEngines
+
+@inject SignInManager<SkyUser> SignInManager
+@inject UserManager<SkyUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    <!-- Nav Item - Love -->
+    <li class="nav-item dropdown no-arrow mx-1">
+        <a class="nav-link dropdown-toggle" href="#" id="FavoDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                @*onmouseover="showFavorite('@Url.Action("Favorite_Partial", "FavoriteDetail", null, Context.Request.Scheme)')"*@
+                onclick="showFavorite('@Url.Action("Favorite_Partial", "FavoriteDetail", null, Context.Request.Scheme)')">
+            <i class="fas fa-heart fa-lg" data-toggle="tooltip" data-placement="bottom" title="Yêu thích"></i>
+            <!-- Counter - love -->
+            <span class="badge badge-danger badge-counter">+</span>
+        </a>
+        <!-- Dropdown - love -->
+        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="FavoDropdown" id="dropdown-favorite">
+            <h6 class="dropdown-header bg-danger text-center">
+                <i class="fas fa-heart fa-lg mr-2"></i>Yêu thích
+            </h6>
+            <div class="dropdown-body">
+                <!--Favorite Item-->
+
+            </div>
+            <a class="dropdown-item text-center text-gray-900 py-3" asp-area="" asp-controller="FavoriteDetail" asp-action="Index">Xem tất cả danh sách yêu thích >></a>
+        </div>
+    </li>
+
+    <!-- Nav Item - Carrt -->
+    <li class="nav-item dropdown no-arrow mx-1" id="cart-drop">
+        <a class="nav-link dropdown-toggle" href="#" id="CartDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                @*onmouseover="showCart('@Url.Action("Cart_Partial", "CartDetail", null, Context.Request.Scheme)')"*@
+                onclick="showCart('@Url.Action("Cart_Partial", "CartDetail", null, Context.Request.Scheme)')">
+            <i class="fas fa-shopping-cart fa-lg" data-toggle="tooltip" data-placement="bottom" title="Giỏ hàng"></i>
+            <!-- Counter - Carrt -->
+            <span class="badge badge-danger badge-counter">+</span>
+        </a>
+        <!-- Dropdown - Carrt -->
+        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="CartDropdown" id="dropdown-cart">
+            <h6 class="dropdown-header text-center">
+                <i class="fas fa-shopping-cart fa-lg mr-2"></i>Giỏ hàng
+            </h6>
+            <div class="dropdown-body">
+                <!--Cart Item-->
+
+            </div>
+            <a class="dropdown-item text-center text-gray-900 py-3" asp-area="" asp-controller="CartDetail" asp-action="Index">Xem tất cả giỏ hàng >></a>
+        </div>
+    </li>
+
+
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <li class="nav-item dropdown no-arrow show">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="mr-2 d-none d-lg-inline text-gray-600 small" data-toggle="tooltip" data-placement="bottom" title="Tài khoản">@UserManager.GetUserName(User)</span>
+            <img class="img-profile rounded-circle bg-dark" style="height: 32px" src="~/logo/User.gif">
+        </a>
+        <!-- Dropdown - User Information -->
+        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+            <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Hồ sơ
+            </a>
+            <a class="dropdown-item py-2" asp-controller="Order" asp-action="Index">
+                <i class="fas fa-shopping-bag fa-sm fa-fw mr-2 text-gray-400"></i>
+                Đơn hàng
+            </a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item py-2" href="#" data-toggle="modal" data-target="#logoutModal">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Đăng xuất
+            </a>
+        </div>
+    </li>
+}
+else
+{
+    <li class="nav-item bg-light">
+        <a class="nav-link nav-menu text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-menu text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+    </li>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+}

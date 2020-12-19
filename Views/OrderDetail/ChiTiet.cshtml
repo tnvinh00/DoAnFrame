@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Sky.Models.OrderDetail>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    int i = 1;
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+    Order order = ViewBag.order;
+}
+
+<h4 class="text-center">Đơn hàng <strong>@ViewBag.orderIdText</strong></h4>
+
+
+<p>
+    @ViewBag.Mess
+</p>
+<table class="table">
+    <thead>
+        <tr class="text-center" >
+            <th>STT</th>
+            <th>
+                Hình ảnh
+            </th>
+            <th>
+                Tên
+            </th>
+            <th>
+                Đơn giá
+            </th>
+            <th>
+                Số lượng
+            </th>
+            <th>
+                Thành tiền
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="text-center">
+                <td class="align-middle">
+                    @i
+                </td>
+                <td class="align-middle">
+                    <img src="@("~/image/" + item.Product.ProductImage)" asp-append-version="true" class="rounded" 
+                         style="height: 100px; width:100px"/>
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.ProductOrderName)
+                </td>
+                <td class="align-middle">
+                    @((@item.Product.ProductPrice).ToString("#,##0", culture))
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td class="align-middle">
+                    <strong>@((@item.Product.ProductPrice*@item.Quantity).ToString("#,##0", culture))</strong>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+<hr class="w-100"/>
+<div class="d-flex justify-content-end my-4">
+    <h5>
+        Tổng thành tiền: <strong>@(ViewBag.orderPrice.ToString("#,##0", culture))</strong>
+    </h5>
+</div>

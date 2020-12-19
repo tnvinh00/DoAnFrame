@@ -1,0 +1,16 @@
+﻿@model Sky.Models.Category
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+
+<h4>Bạn có chắc chắn muốn xóa danh mục "@Model.CategoryName" không?</h4>
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CategoryId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+    </form>
+</div>

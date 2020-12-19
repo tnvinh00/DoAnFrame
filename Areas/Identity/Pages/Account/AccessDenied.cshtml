@@ -1,0 +1,30 @@
+﻿@page "/accessdenied/"
+@model AccessDeniedModel
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.ViewEngines
+
+@inject SignInManager<SkyUser> SignInManager
+@inject UserManager<SkyUser> UserManager
+
+@{
+    ViewData["Title"] = "Access denied";
+    var currentUser = await UserManager.GetUserAsync(User);
+    var isAdmin = currentUser != null && (await UserManager.IsInRoleAsync(currentUser, "Admin") || await UserManager.IsInRoleAsync(currentUser, "Manager"));
+
+    if (isAdmin)
+    {
+        Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+<div class="text-center">
+    <h1 class="text-danger">Bạn không có quyền truy cập trang này!</h1>
+    <p class="text-danger">Liên hệ Manager để được giúp đỡ</p>
+    <img src="https://i.imgur.com/ARuQx9A.gif" alt="gif denied" />
+</div>
+    

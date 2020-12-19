@@ -1,0 +1,82 @@
+﻿@page "/admin/role/users/"
+@model Sky.Areas.Identity.Pages.Role.UserModel
+@{
+    ViewData["Title"] = "Role User";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+}
+
+
+<h4>@ViewData["Title"]</h4>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<form asp-page="./User" method="get" class="form-inline my-4">
+    <div class="form-group">
+        <label>Search</label>
+        <input type="text" class="form-control ml-2" name="SearchString" value="@ViewData["CurrentFilter"]" />
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+    
+    <a class="btn btn-primary mx-2" asp-page="./User">Danh sách đầy đủ</a>
+</form>
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a class="text-decoration-none" asp-page="./User" asp-route-sortOrder="@Model.UserNameSort">
+                UserName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>
+            <a class="text-decoration-none" asp-page="./User" asp-route-sortOrder="@Model.FullNameSort">
+                FullName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in @Model.users)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.FullName</td>
+            <td>@user.Listroles</td>
+            <td>
+                <form method="POST" class="d-inline">
+                    <button name="Input.ID" value="@user.Id" class="btn btn-success btn-sm"
+                            asp-page="./AddUserRole">
+                        Cập nhật Role
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<p class="h4 text-center mt-5">
+    @ViewBag.Message
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Page("./User", new { pageNumber = _pagenumber });
+    };
+
+    var datapaging = new
+    {
+        currentPage = Model.PageNumber,
+        countPages = Model.TotalPages,
+        generateUrl = generateUrl
+    };
+
+}
+<partial name="_PagingPartial" model="@datapaging" />

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Sky.Models.Type>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    int i = 0;
+}
+
+
+<div class="card shadow mt-5">
+    <div class="card-header py-3 d-flex align-items-center">
+        <div class="flex-grow-1">
+            <h4 class="m-0 font-weight-bold text-primary">Quản lí danh mục sản phẩm</h4>
+        </div>
+        <div>
+            <a onclick="showInPopup('@Url.Action("Create","Type", null, Context.Request.Scheme)', 'Tạo loại sản phẩm mới')" class="btn btn-primary text-white px-3">
+                Tạo mới <i class="fas fa-plus ml-2"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>
+                        Tên loại sản phẩm
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">@(i+1)</td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.TypeName)
+                        </td>
+                        <td class="align-middle">
+                            <a onclick="showInPopup('@Url.Action("Edit","Type", new { id = item.TypeId}, Context.Request.Scheme)', 'Sửa danh mục')" class="btn btn-sm btn-success text-white">Sửa</a>
+                            <a onclick="showInPopup('@Url.Action("Delete","Type", new { id = item.TypeId}, Context.Request.Scheme)', 'Xóa danh mục')" class="btn btn-sm btn-danger text-white">Xóa</a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,175 @@
+﻿@model Sky.Models.Product
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
+}
+
+<h1>Details</h1>
+
+<div class="row product mb-5">
+    <div class="col-md-6 col-xs-12">
+        <div class="product-thume overflow-hidden mb-5 d-flex justify-content-center">
+            <a href="" data-toggle="modal" data-target="#productModal">
+                <img src="@("~/image/"+Model.ProductImage)" asp-append-version="true" class="img-fluid p-0 rounded" alt="ProductImage"
+                     style="width: 400px; height:500px">
+            </a>
+        </div>
+        <div class="row d-flex px-4">
+            <div class="col-5 rounded-lg bg-gray-200 border border-left-danger p-3 mr-auto">
+                <i class="fas fa-lg fa-check-circle" style="color: #D41830;"></i>
+                <span>Kiểm tra hàng trước khi nhận hàng</span>
+            </div>
+            <div class="col-5 rounded-lg bg-gray-200 border border-left-danger p-3">
+                <i class="fas fa-lg fa-redo-alt" style="color: #D41830;"></i>
+                <span>Miễn phí đổi trả trong vòng 7 ngày</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="mb-3">
+            <span class="h2 text-dark">@Model.ProductName</span>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <i class="fas fa-lg fa-eye fa-sm"></i>
+                <span>@(Model.ViewCount)</span>
+                <span class="text-xs">Đã xem</span>
+            </div>
+            <div class="col-6">
+                <i class="fas fa-lg fa-heart fa-sm"></i>
+                <span>50</span>
+                <span class="text-xs">Đã thích</span>
+            </div>
+
+        </div>
+        <div class="form-inline my-3 mx-0 bg-light rounded-lg p-3">
+            <span class="text-danger h3 m-0 p-0"><strong>@(Model.ProductPrice.ToString("#,##0", culture))</strong></span>
+            @{
+                if(@Model.PreviousPrice != 0){
+                    <span class="text-dark h6 ml-3 mb-0"><del>@(Model.PreviousPrice.ToString("#,##0", culture))</del></span>
+                }
+            }
+        </div>
+
+        <div class="form-inline my-3 mx-0">
+            <div class="input-group rounded-lg py-1">
+                <form asp-action="AddtoCart2" method="post" onsubmit="return addtoCart2(this)" class="col-10">
+                    <div class="row ml-2 d-flex align-items-center">
+                        <span class="col-5 p-0">Số lượng</span>
+
+                        <div class="col-7">
+                            <div class="form-inline border rounded-lg py-1 row">
+                                <input hidden name="Id" value="@Model.ProductId" />
+                                <input class="btn col-3" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" value="-" />
+
+                                <input class="form-control-plaintext col-6 text-center" id="quantity" value="1" type="number" min="1" name="Quantity"
+                                       onkeypress="if(this.value.length==3) return false;">
+
+                                <input class="btn col-3" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" value="+" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-success px-4 py-2 my-2" value="Thêm vào giỏ hàng" />
+
+                </form>
+
+            </div>
+
+        </div>
+        <div class="form-inline my-3">
+            <form>
+                <button type="submit" class="btn btn-danger px-4 py-2 my-2 mr-3">
+                    
+                    Thêm vào yêu thích
+                </button>
+            </form>
+            <form>
+                <button type="submit" class="btn btn-success px-4 py-2 my-2">
+                    <i class="fas fa-lg fa-cart-plus cart"></i>
+                    Thêm vào giỏ hàng
+                </button>
+            </form>
+        </div>
+        <div>
+            <p>Mô tả</p>
+            <div class="product-short-description">
+                <ul>
+                    <li style="text-align: left">
+                        @Model.ProductDescription
+                    </li>
+                </ul>
+                <p style="text-align: left">Cập nhật sản phẩm mới và các thông tin về shop tại:</p>
+                <p style="text-align: left">
+                    <a href="https://facebook.com/theciu2016">https://facebook.com/theciu2016</a>
+                </p>
+                <p style="text-align: left">
+                    <a href="https://instagram.com/theciu2016">https://instagram.com/theciu2016</a>
+                </p>
+                <p style="text-align: left">
+                    <a href="https://shopee.vn/theciu2016">https://shopee.vn/theciu2016</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="h3">@Model.ProductName</span>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <img src="@("~/image/"+Model.ProductImage)" asp-append-version="true" class="img-fluid p-0 rounded" alt="ProductImage" style="min-height: 500px;" id="img_01">
+            </div>
+            <div class="modal-footer">
+                <form>
+                    <button type="submit" class="btn btn-danger px-4 py-2 my-2 mr-3">
+                        <i class="fas fa-lg fa-heart hearted"></i>
+                        Thêm vào yêu thích
+                    </button>
+                </form>
+                <form>
+                    <button type="submit" class="btn btn-success px-4 py-2 my-2">
+                        <i class="fas fa-lg fa-cart-plus hearted"></i>
+                        Thêm vào giỏ hàng
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var inputBox = document.getElementById("quantity");
+
+        var invalidChars = [
+            "-",
+            "+",
+            "e",
+            "."
+        ];
+
+        inputBox.addEventListener("input", function () {
+            this.value = this.value.replace(/[e\+\-\.]/gi, "");
+            if (this.value > 999) {
+                this.value = "999"
+            }
+        });
+
+
+        inputBox.addEventListener("keydown", function (e) {
+            if (invalidChars.includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

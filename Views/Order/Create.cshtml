@@ -1,0 +1,147 @@
+﻿@model Sky.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h3 class="text-center">Tạo đơn hàng</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <strong class="control-label">Tên người nhận</strong>
+                <input asp-for="ReciverName" class="form-control" />
+                <span asp-validation-for="ReciverName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <strong class="control-label">Địa chỉ người nhận</strong>
+                <input hidden asp-for="ReciverAddress" class="form-control" id="diachi"/>
+                <span asp-validation-for="ReciverAddress" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="tinh">Tỉnh, Thành phố</label>
+                    <select class="form-control select-tinh" id="tinh">
+                        <option>Chọn</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="huyen">Quận, Huyện</label>
+                    <select class="form-control select-huyen" id="huyen">
+                        <option>Chọn</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="xa">Xã, Phường</label>
+                    <select class="form-control select-xa" id="xa">
+                        <option>Chọn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="">Địa chỉ chi tiết</label>
+                <input class="form-control" type="text" id="chitiet" required>
+            </div>
+
+            <div class="form-group col-sm-12 d-none" id="err-address">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span for="">Vui lòng chọn và nhập địa chỉ</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <strong class="control-label">Số điện thoại người nhận</strong>
+                <input asp-for="ReciverPhone" class="form-control" />
+                <span asp-validation-for="ReciverPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <strong class="control-label">Email</strong>
+                <input asp-for="ReciverEmail" class="form-control" />
+                <span asp-validation-for="ReciverEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <strong class="control-label">Ghi chú đơn hàng</strong>
+                <input asp-for="OrderNote" class="form-control" />
+                <span asp-validation-for="OrderNote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("document").ready(function () {
+            var diachifull;
+            var tinhoption;
+            tinhoption += "<option value='" + 0 + "'>" + "Chọn tỉnh" + "</option>";
+            $.getJSON('/js/json/tinh.json', function (result) {
+                $.each(result, function (i, tinh) {
+                    //<option value='countrycode'>contryname</option>
+                    tinhoption += "<option value='" + tinh.code + "'>" + tinh.name + "</option>";
+                });
+                $('#tinh').html(tinhoption);
+            });
+
+            $("#tinh").change(function () {
+                $("#diachi").val("");
+                var huyenoption;
+                //Lấy giá trị values đã select bên thẻ select #tinh
+                $("#err-address").addClass("d-none");
+                var _tinh = $(this).val();
+                huyenoption += "<option value='" + 0 + "'>" + "Chọn quận huyện" + "</option>";
+                $.getJSON('/js/json/huyen.json', function (result) {
+                    $.each(result, function (i, huyen) {
+                        //<option value='stateCode'>stateName</option>
+                        if (_tinh == huyen.parent_code)
+                            huyenoption += "<option value='" + huyen.code + "'>" + huyen.name + "</option>";
+                    });
+                    $('#huyen').html(huyenoption);
+                });
+            });
+
+            $("#huyen").change(function () {
+                $("#diachi").val("");
+                var xaoption;
+                //Lấy giá trị values đã select bên thẻ select #huyen
+                var _xa = $(this).val();
+                xaoption += "<option value='" + 0 + "'>" + "Chọn xã" + "</option>";
+                $.getJSON('/js/json/xa.json', function (result) {
+                    $.each(result, function (i, xa) {
+                        //<option value='stateCode'>stateName</option>
+                        if (_xa == xa.parent_code)
+                            xaoption += "<option value='" + xa.code + "'>" + xa.name + "</option>";
+                    });
+                    $('#xa').html(xaoption);
+                });
+            });
+
+            $("#xa").change(function () {
+                diachifull = "";
+                diachifull = $("#xa option:selected").text() + ", " + $("#huyen option:selected").text() + ", " + $("#tinh option:selected").text();
+                $("#diachi").val(diachifull);
+            });
+
+            $("#chitiet").on('input', function () {
+                var _diachi
+                _diachi = $("#chitiet").val() + ", " + $("#xa option:selected").text() + ", "
+                    + $("#huyen option:selected").text() + ", " + $("#tinh option:selected").text();
+                $("#diachi").val(_diachi);
+
+                if ($("#tinh option:selected").index() != 0 && $("#huyen option:selected").index() != 0 && $("#xa option:selected").index() != 0 && $("#chitiet").val() != "") {
+                    $("#err-address").addClass("d-none");
+                }
+                else {
+                    $("#err-address").removeClass("d-none");
+                }
+            })
+        });
+    </script>
+}

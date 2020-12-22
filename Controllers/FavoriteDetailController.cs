@@ -91,7 +91,7 @@ namespace Sky.Controllers
 
                 await _context.SaveChangesAsync();
 
-                ViewData["Mess"] = "Thêm Thành công";
+                ViewData["Mess"] = "Thêm thành công";
             }
             catch
             {
@@ -120,7 +120,7 @@ namespace Sky.Controllers
 
                 await _context.SaveChangesAsync();
 
-                ViewData["Mess"] = "Thành công";
+                ViewData["Mess"] = "Đã xóa";
             }
             catch
             {
@@ -139,7 +139,7 @@ namespace Sky.Controllers
 
             var favo = _context.FavoriteDbSet.Where(c => c.UserId == id).ToList().FirstOrDefault();
 
-            var skyAppDbContext = _context.FavoriteDetailDbSet.Include(c => c.Favorite).Include(c => c.Product).Where(c => c.FavoriteId == favo.FavoriteId);
+            var skyAppDbContext = _context.FavoriteDetailDbSet.Include(c => c.Favorite).Include(c => c.Product).Include(c => c.Product.Type).Include(c => c.Product.Category).Where(c => c.FavoriteId == favo.FavoriteId);
 
             return View(await skyAppDbContext.ToListAsync());
         }

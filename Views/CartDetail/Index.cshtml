@@ -2,13 +2,13 @@
 @using System.Globalization
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Giỏ hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int i = 1;
     CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
 }
 
-<h1 class="text-center mt-5 mb-4">
+<h1 class="text-center mt-5 mb-4 text-primary">
     <i class="fas fa-shopping-cart fa-lg mr-2"></i> 
     Giỏ hàng
 </h1>
@@ -16,113 +16,119 @@
 <h6 class="text-center mb-4">
     (Giỏ hàng bạn có @Model.Count() sản phẩm)
 </h6>
-<a onclick="loadCart('@Url.Action("LoadCart","CartDetail", null, Context.Request.Scheme)')" class="btn btn-circle btn-primary text-white">
-    <i class="fas fa-spin fa-sync-alt"></i>
-</a>
-<div class="mb-5" id="table-cart">
-    <table class="table table-hover" id="cart-table">
-        <thead>
-            <tr class="text-center">
-                <th>
-                    STT
-                </th>
-                <th>
-                    @*@Html.DisplayNameFor(model => model.Product.ProductName)*@
-                    Hình ảnh
-                </th>
-                <th>
-                    Tên sản phẩm
-                </th>
-                <th>
-                    Số lượng
-                </th>
-                <th>
-                    Đơn Giá
-                </th>
-                <th>
-                    Thành tiền
-                </th>
-                <th>
 
-                </th>
-            </tr>
-        </thead>
-        <tbody class="cart-body">
-            @foreach (var item in Model)
-            {
-                <tr class="text-center" data-toggle="tooltip" data-placement="right" title="@Html.DisplayFor(modelItem => item.Product.ProductName)">
-                    <td class="align-middle">
-                        @i
-                    </td>
-                    <td class="align-middle">
-                        <a asp-controller="Product" asp-action="ChiTiet" asp-route-id="@item.ProductId">
-                            <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" style="height: 120px; width: 100px" class="rounded"/>
-                        </a>                    
-                    </td>
-                    <td class="align-middle">
-                        <span class="d-inline-block text-truncate" style="max-width:150px">
-                            @Html.DisplayFor(modelItem => item.Product.ProductName)
-                        </span>
-                    </td>
-                    <td class="align-middle">
-                        <div class="d-flex justify-content-center">
-                            <div class="input-group col-md-8 border rounded-lg py-1">
-                                <button class="btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown();
-                                    EditItem('@Url.Action("DesItem", "CartDetail", new { id = @item.ProductId }, Context.Request.Scheme)', 'Des Item')">
-                                    <i class="fas fa-minus fa-lg"></i>
-                                </button>
-
-                                <input class="form-control-plaintext text-center" id="quantity" value=@item.ProductQuantity type="number" min="1"
-                                       onkeypress="if(this.value.length==3) return false;">
-
-                                <button class="btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp();
-                                    EditItem('@Url.Action("IncItem", "CartDetail", new { id = @item.ProductId }, Context.Request.Scheme)', 'Inc Item')">
-                                    <i class="fas fa-plus fa-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    </td>
-                    <td class="align-middle">
-                        @((@item.Product.ProductPrice).ToString("#,##0", culture))
-                    </td>
-                    <td class="align-middle">
-                        <strong>@((@item.Product.ProductPrice*@item.ProductQuantity).ToString("#,##0", culture))</strong>
-                    </td>
-                    <td class="align-middle">
-                        <a id="@("product" + @item.ProductId)" class="btn btn-sm btn-danger btn-circle text-white"
-                           data-toggle="tooltip" data-placement="top" title="Xóa"
-                           onclick="DeleteItem('@Url.Action("DeleteItemCart", "CartDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Delete Item', @item.ProductId)">
-                            <i class="fas fa-times" style="font-size:18px"></i>
+<div class="card shadow">
+    <div class="mb-5 pt-0 card-body" id="table-cart">
+        <table class="table table-hover" id="cart-table">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        STT
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.Product.ProductName)*@
+                        Hình ảnh
+                    </th>
+                    <th>
+                        Tên sản phẩm
+                    </th>
+                    <th>
+                        Số lượng
+                    </th>
+                    <th>
+                        Đơn Giá
+                    </th>
+                    <th>
+                        Thành tiền
+                    </th>
+                    <th>
+                        <a onclick="loadCart('@Url.Action("LoadCart","CartDetail", null, Context.Request.Scheme)')" 
+                           class="btn btn-sm btn-circle btn-primary text-white" data-toggle="tooltip" data-placement="top"
+                                  title="Tải lại giỏ hàng">
+                            <i class="fas fa-spin fa-sync-alt"></i>
                         </a>
-                        <a onclick="addItem('@Url.Action("AddtoFavo", "FavoriteDetail", new { id = @item.ProductId }, Context.Request.Scheme)')"
-                           class="btn btn-sm btn-success btn-circle text-white" data-toggle="tooltip" data-placement="top" title="Thêm vào yêu thích">
-                            <i class="fas fa-heart" style="font-size:18px"></i>
-                        </a>
-                    </td>
+                    </th>
                 </tr>
-                i++;
-            }
-        </tbody>
-    </table>
-    <hr class="w-100" />
-   @if (Model.Count() != 0)
-    {
-        <div class="d-flex justify-content-end my-4">
-            <h5>
-                Tổng thành tiền: <strong>@(ViewBag.Total.ToString("#,##0", culture))</strong>
-            </h5>
-        </div>
-        <div class="d-flex justify-content-end">
-            <a onclick="showInPopup('@Url.Action("Create", "Order", null, Context.Request.Scheme)', 'Đặt hàng')"
-               class="btn btn-lg btn-info text-white px-5">Đặt hàng</a>
-        </div>
+            </thead>
+            <tbody class="cart-body">
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td class="align-middle">
+                            @i
+                        </td>
+                        <td class="align-middle">
+                            <a asp-controller="Product" asp-action="ChiTiet" asp-route-id="@item.ProductId">
+                                <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" style="height: 120px; width: 100px" class="rounded" />
+                            </a>
+                        </td>
+                        <td class="align-middle">
+                            <span class="d-inline-block text-truncate" data-toggle="tooltip" data-placement="top"
+                                  title="@Html.DisplayFor(modelItem => item.Product.ProductName)" style="max-width:150px">
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </span>
+                        </td>
+                        <td class="align-middle">
+                            <div class="d-flex justify-content-center">
+                                <div class="input-group col-md-8 border rounded-lg py-1">
+                                    <button class="btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown();
+                                    EditItem('@Url.Action("DesItem", "CartDetail", new { id = @item.ProductId }, Context.Request.Scheme)', 'Des Item')">
+                                        <i class="fas fa-minus fa-lg"></i>
+                                    </button>
 
-    }
-    else
-    {
-        <p class="h4 text-center mt-5">Giỏ hàng trống!</p>
-    }
+                                    <input class="form-control-plaintext text-center" id="quantity" value=@item.ProductQuantity type="number" min="1"
+                                           onkeypress="if(this.value.length==3) return false;">
+
+                                    <button class="btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp();
+                                    EditItem('@Url.Action("IncItem", "CartDetail", new { id = @item.ProductId }, Context.Request.Scheme)', 'Inc Item')">
+                                        <i class="fas fa-plus fa-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td class="align-middle">
+                            @((@item.Product.ProductPrice).ToString("#,##0", culture))
+                        </td>
+                        <td class="align-middle">
+                            <strong>@((@item.Product.ProductPrice*@item.ProductQuantity).ToString("#,##0", culture))</strong>
+                        </td>
+                        <td class="align-middle">
+                            <a id="@("product" + @item.ProductId)" class="btn btn-sm btn-danger btn-circle text-white"
+                               data-toggle="tooltip" data-placement="top" title="Xóa"
+                               onclick="DeleteItem('@Url.Action("DeleteItemCart", "CartDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Delete Item', @item.ProductId)">
+                                <i class="fas fa-trash" style="font-size:16px"></i>
+                            </a>
+                            <a onclick="addItem('@Url.Action("AddtoFavo", "FavoriteDetail", new { id = @item.ProductId }, Context.Request.Scheme)')"
+                               class="btn btn-sm btn-success btn-circle text-white" data-toggle="tooltip" data-placement="top" title="Thêm vào yêu thích">
+                                <i class="fas fa-heart" style="font-size:16px"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+        <hr class="w-100" />
+        @if (Model.Count() != 0)
+        {
+            <div class="d-flex justify-content-end my-4">
+                <h5>
+                    Tổng thành tiền: <strong>@(ViewBag.Total.ToString("#,##0", culture))</strong>
+                </h5>
+            </div>
+            <div class="d-flex justify-content-end">
+                <a onclick="showInPopup('@Url.Action("Create", "Order", null, Context.Request.Scheme)', 'Đặt hàng')"
+                   class="btn btn-lg btn-info text-white px-5">Đặt hàng</a>
+            </div>
+
+        }
+        else
+        {
+            <p class="h4 text-center mt-5">Giỏ hàng trống!</p>
+        }
+    </div>
+
 </div>
 
 

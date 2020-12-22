@@ -1,42 +1,101 @@
 ﻿@model IEnumerable<Sky.Models.FavoriteDetail>
 
+@using System.Globalization
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách yêu thích";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
 }
 
-<h1>Index</h1>
+<h1 class="text-center mt-5 mb-4 text-danger">
+    <i class="fas fa-heart fa-lg mr-2"></i>
+    Danh sách yêu thích
+</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Favorite)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Favorite.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductDescription)
-            </td>
-            <td>
-                <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')" class="btn btn-sm btn-info text-white">Add to Cart</a>
-                <a id="@("product" +@item.ProductId)" onclick="DeleteItem('@Url.Action("DeleteItemFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Delete Item', @item.ProductId)"
-                   class="btn btn-sm btn-danger text-white">Delete</a>
-            </td>
-        </tr>
+<h6 class="text-center mb-4">
+    (Danh sách yêu thích của bạn có @Model.Count() sản phẩm)
+</h6>
+
+
+<div class="card shadow">
+    <div class="card-body">
+        <table class="table table-hover" id="dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th class="align-middle">
+                        Hình ảnh
+                    </th>
+                    <th class="align-middle">
+                        Tên sản phẩm
+                    </th>
+                    <th class="align-middle">
+                        Giá
+                    </th>
+                    <th class="align-middle">
+                        Phân loại
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td class="align-middle">
+                            <a asp-controller="Product" asp-action="ChiTiet" asp-route-id="@item.ProductId">
+                                <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" style="height: 120px; width: 100px" class="rounded" />
+                            </a>
+                        </td>
+                        <td class="align-middle">
+                            <span data-toggle="tooltip" data-placement="top" title="@Html.DisplayFor(modelItem => item.Product.ProductName)"
+                                  class="d-inline-block text-truncate" style="max-width:200px">
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </span>
+                        </td>
+                        <td class="align-middle">
+                            @((@item.Product.ProductPrice).ToString("#,##0", culture))
+                        </td>
+                        <td class="align-middle">
+                            @item.Product.Category.CategoryName/@item.Product.Type.TypeName
+                        </td>
+                        <td class="align-middle">
+                            <a onclick="addItem('@Url.Action("AddtoCart", "Product", new { id = @item.ProductId}, Context.Request.Scheme)', 'Add to cart')"
+                               class="btn btn-circle btn-sm btn-info text-white" data-toggle="tooltip" data-placement="top" title="Thêm vào giỏ hàng">
+                                <i class="fas fa-cart-plus" style="font-size:16px"></i>
+                            </a>
+                            <a id="@("product" +@item.ProductId)" onclick="DeleteItem('@Url.Action("DeleteItemFavo", "FavoriteDetail", new { id = @item.ProductId}, Context.Request.Scheme)', 'Delete Item', @item.ProductId)"
+                               class="btn btn-circle btn-sm btn-danger text-white" data-toggle="tooltip" data-placement="top" title="Xóa khỏi yêu thích">
+                                <i class="fas fa-trash" style="font-size:16px"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ kết quả mỗi trang",
+                    "zeroRecords": "Không tìm thấy",
+                    "info": "Hiển thị (_START_ - _END_) trong _TOTAL_ kết quả",
+                    "infoEmpty": "Không có kết quả tìm kiếm",
+                    "infoFiltered": "(Trong _MAX_ kết quả)",
+                    "search": "Tìm kiếm: ",
+                    "paginate": {
+                        "previous": "Trang trước",
+                        "next": "Trang kế"
+                    }
+                }
+            });
+        });
+
+    </script>
 }
-    </tbody>
-</table>
+

@@ -32,7 +32,11 @@
                     Thành tiền
                 </th>
                 <th>
-
+                    <a onclick="loadCart('@Url.Action("LoadCart","CartDetail", null, Context.Request.Scheme)')"
+                       class="btn btn-sm btn-circle btn-primary text-white" data-toggle="tooltip" data-placement="top"
+                       title="Tải lại giỏ hàng">
+                        <i class="fas fa-spin fa-sync-alt"></i>
+                    </a>
                 </th>
             </tr>
         </thead>
@@ -44,8 +48,7 @@
                         @i
                     </td>
                     <td class="align-middle">
-                        <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" style="height: 100px" class="rounded"
-                             data-toggle="tooltip" data-placement="top" title="@Html.DisplayFor(modelItem => item.Product.ProductName)" />
+                        <img src="@("~/image/"+item.Product.ProductImage)" asp-append-version="true" style="height: 120px; width: 100px" class="rounded"/>
                     </td>
                     <td class="align-middle">
                         <span class="d-inline-block text-truncate" data-toggle="tooltip" data-placement="top"

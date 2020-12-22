@@ -30,7 +30,7 @@ addtoCart2 = form => {
             success: function (res) {
                 $.notify({
                     message: res,
-                    type: 'primary'
+                    type: 'success'
                 });
             },
             error: function (err) {
@@ -89,7 +89,14 @@ addItem = (url, title) => {
         success: function (res) {
             $.notify({
                 message: res,
-                type: 'primary'
+            }, {
+                offset: {
+                    y: 80,
+                    x: 20,
+                },
+                delay: 500,
+                type: 'success',
+                url_target: '_self',
             });
         }
     })
@@ -102,7 +109,14 @@ CancelOrder = (url) => {
         success: function (res) {
             $.notify({
                 message: res,
-                type: 'primary'
+            }, {
+                offset: {
+                    y: 80,
+                    x: 20,
+                },
+                delay: 500,
+                type: 'success',
+                url_target: '_self',
             });
             $('#form-modal').modal('hide');
         }
@@ -119,7 +133,14 @@ DeleteItem = (url, title, id) => {
             $('#product' + id).parents('tr').remove();
             $.notify({
                 message: res,
-                type: 'primary'
+            }, {
+                offset: {
+                    y: 80,
+                    x: 20,
+                },
+                delay: 500,
+                type: 'success',
+                url_target: '_self',
             });
         }
     })
@@ -132,7 +153,14 @@ EditItem = (url, title) => {
         success: function (res) {
             $.notify({
                 message: res,
-                type: 'primary'
+            }, {
+                offset: {
+                    y: 80,
+                    x: 20,
+                },
+                delay: 500,
+                type: 'success',
+                url_target: '_self',
             });
             loadCart('/CartDetail/loadCart');
         }

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Sky.Models.Product>
 @using System.Globalization
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Kết quả tìm kiếm - " + ViewData["CurrentFilter"];
     Layout = "~/Views/Shared/_Layout.cshtml";
     CultureInfo culture = CultureInfo.CreateSpecificCulture("vi-VI");
 }
@@ -14,6 +14,13 @@
         <span>@ViewData["CurrentFilter"]</span>
     </div>
 </div>
+
+<h3 class="text-center">
+    <strong class="">
+        <i class="fas fa-search"></i>
+        Kết quả tìm kiếm
+    </strong>
+</h3>
 
 
 <div class="card shadow my-3">

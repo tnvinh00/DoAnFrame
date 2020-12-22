@@ -62,7 +62,7 @@ namespace Sky.Controllers
                 {
                     check.ProductQuantity += 1;
 
-                    ViewData["Mess"] = "+1";
+                    ViewData["Mess"] = "Đã cập nhật +1 !";
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace Sky.Controllers
 
                     _context.CartDetailDbSet.Add(cartde);
 
-                    ViewData["Mess"] = "Thêm Thành công";
+                    ViewData["Mess"] = "Thêm thành công";
                 }
 
                 await _context.SaveChangesAsync();
@@ -113,7 +113,7 @@ namespace Sky.Controllers
                 {
                     check.ProductQuantity += Convert.ToInt32(quantity);
 
-                    ViewData["Mess"] = "+" + quantity;
+                    ViewData["Mess"] = "Đã cập nhật +" + quantity;
 
                     await _context.SaveChangesAsync();
 

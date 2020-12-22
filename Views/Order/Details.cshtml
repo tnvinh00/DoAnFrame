@@ -62,8 +62,8 @@
         <dt class = "col-sm-3">
             Ngày đặt hàng
         </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.OrderDate)
+        <dd class="col-sm-9">
+            @((Model.OrderDate).ToString("dd/MM/yyyy HH:mm"))
         </dd>
         <dt class = "col-sm-3">
             Tổng tiền

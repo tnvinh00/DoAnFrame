@@ -18,7 +18,7 @@ namespace Sky.Controllers
 {
     public class ProductController : Controller
     {
-        const int USER_PER_PAGE = 16;
+        const int USER_PER_PAGE = 12;
         private readonly SkyAppDbContext _context;
         private readonly UserManager<SkyUser> _userManager;
         private readonly SignInManager<SkyUser> _signInManager;

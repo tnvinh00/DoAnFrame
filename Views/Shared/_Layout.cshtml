@@ -16,6 +16,32 @@
 
 </head>
 <body id="page-top">
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v9.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your Chat Plugin code -->
+    <div class="fb-customerchat"
+         attribution=setup_tool
+         page_id="103354741600149"
+         theme_color="#e68585"
+         logged_in_greeting="Xin chào. Bạn cần Meow giúp gì thì để lại tin nhắn tại đây nha!"
+         logged_out_greeting="Xin chào. Bạn cần Meow giúp gì thì để lại tin nhắn tại đây nha!">
+    </div>
     <header>
         @using Microsoft.AspNetCore.Identity
         @{
@@ -25,8 +51,8 @@
                 return (activePage == page) ? "active" : "";
             };
         }
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow fixed-top mb-3 topbar">
-            <button class="navbar-toggler btn btn-circle" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom shadow fixed-top mb-3 topbar">
+            <button class="navbar-toggler btn btn-circle border" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -51,7 +77,7 @@
                             <form class="form-inline ml-auto w-100 navbar-search" asp-controller="Product" asp-action="Search" method="GET">
                                 <div class="input-group w-100">
                                     <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm ..." name="q"
-                                           aria-label="Search" aria-describedby="basic-addon2">
+                                           aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button">
                                             <i class="fas fa-search fa-sm"></i>
@@ -68,7 +94,7 @@
                 <form class="d-none d-lg-inline form-inline ml-auto mr-sm-5 my-2 my-md-0 mw-100 navbar-search" asp-controller="Product" asp-action="Search" method="GET">
                     <div class="input-group">
                         <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm ..." name="q"
-                               aria-label="Search" aria-describedby="basic-addon2">
+                               aria-label="Search" aria-describedby="basic-addon2" autocomplete="off">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>

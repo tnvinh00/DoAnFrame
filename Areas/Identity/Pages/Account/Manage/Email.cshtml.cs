@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Sky.Areas.Identity.Data;
+using System.Net.Mail;
 
 namespace Sky.Areas.Identity.Pages.Account.Manage
 {
@@ -45,7 +46,7 @@ namespace Sky.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Email không hợp lệ")]
             [Display(Name = "New email")]
             public string NewEmail { get; set; }
         }
@@ -105,11 +106,31 @@ namespace Sky.Areas.Identity.Pages.Account.Manage
                     "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                //
+                System.Net.NetworkCredential credential = new System.Net.NetworkCredential("meow.tnv@outlook.com", "Meow1234@");
+                SmtpClient client = new SmtpClient("smtp-mail.outlook.com")
+                {
+                    Port = 587,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    EnableSsl = true,
+                    Credentials = credential
+                };
+                MailMessage message = new MailMessage("meow.tnv@outlook.com", Input.NewEmail)
+                {
+                    Subject = "Xác nhận email mới",
+                    Body = "<img src='https://i.imgur.com/fs3LmWO.png'> <br>"
+                        + $"Bấm vào đây để xác nhận email mới <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Bấm vào đây</a>.",
+                    IsBodyHtml = true
+                };
+                client.Send(message);
+                //
+
+                StatusMessage = "Vui lòng kiểm tra email và xác nhận";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Email không được thay đổi";
             return RedirectToPage();
         }
 

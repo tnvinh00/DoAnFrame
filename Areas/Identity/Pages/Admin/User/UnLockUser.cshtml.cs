@@ -43,7 +43,7 @@ namespace Sky.Areas.Identity.Pages.Admin.User
         public string UserNameSort { get; set; }
         public string FullNameSort { get; set; }
         public string CurrentSort { get; set; }
-        public async Task<IActionResult> OnGet(string sortOrder, string searchString)
+        public async Task<IActionResult> OnGetAsync(string sortOrder, string searchString)
         {
             ViewData["CurrentFilter"] = searchString;
 
@@ -128,7 +128,7 @@ namespace Sky.Areas.Identity.Pages.Admin.User
 
             Notification = "Đã mở khóa tài khoản " + user.Email;
 
-            return RedirectToPage("LockUser");
+            return RedirectToPage("UnLockUser");
         }
     }
 }

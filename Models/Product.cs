@@ -16,10 +16,10 @@ namespace Sky.Models
         public int ProductId { set; get; }
 
         [Required(ErrorMessage = "Vui lòng nhập đầy đủ")]
-        [DisplayName("ProductName")]
+        [DisplayName("Tên sản phẩm")]
         public string ProductName { set; get; }
 
-        [DisplayName("ProductImage")]
+        [DisplayName("Hình ảnh")]
         public string ProductImage { set; get; }
 
         [NotMapped]
@@ -27,22 +27,22 @@ namespace Sky.Models
         public IFormFile ProductImageFile { set; get; }
 
         [Required(ErrorMessage = "Vui lòng nhập đầy đủ")]
-        [DisplayName("ProductDescription")]
+        [DisplayName("Mô tả sản phẩm")]
         public string ProductDescription { set; get; }
 
         [Required(ErrorMessage = "Vui lòng nhập đầy đủ")]
-        [DisplayName("ProductPrice")]
+        [DisplayName("Giá sản phẩm")]
         [Range(0,10000000)]
         public int ProductPrice { set; get; }
 
         [DefaultValue(0)]
-        [DisplayName("PreviousPrice")]
+        [DisplayName("Giá trước khuyến mãi (Điền 0 nếu muốn để trống)")]
         public int PreviousPrice { set; get; }
 
-        [DisplayName("ViewCount")]
+        [DisplayName("Lượt xem")]
         public int ViewCount { get; set; }
 
-        [DisplayName("ProductDate")]
+        [DisplayName("Ngày tạo sản phẩm")]
         public DateTime ProductDate { get; set; }
 
         [Required]

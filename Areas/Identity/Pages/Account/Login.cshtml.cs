@@ -43,6 +43,9 @@ namespace Sky.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
+        [TempData]
+        public string Status { set; get; }
+
         public class InputModel
         {
             [Required]
@@ -64,6 +67,13 @@ namespace Sky.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
+            Status = "";
+
+            if (returnUrl != null)
+            {
+                Status = "Bạn cần đăng nhập để tiếp tục!";
+            }
+
             returnUrl ??= Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
@@ -80,21 +90,27 @@ namespace Sky.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                  
                 // This doesn't count login failures towards account lockout
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                if (user.LockoutEnabled == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị khóa");
+                    return Page();
+                }
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                    if(returnUrl != null)
+                    if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager"))
+                        return LocalRedirect("~/admin");
+
+                    if (returnUrl != null)
                     {
                         return LocalRedirect(returnUrl);
                     }
-
-                    if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager"))
-                        return LocalRedirect( "~/admin");
 
                     return LocalRedirect(returnUrl);
                 }
@@ -104,17 +120,19 @@ namespace Sky.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    _logger.LogWarning("Tài khoản của bạn đã bị khóa");
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị khóa");
+                    //return RedirectToPage("./Lockout");
+                    return Page();
                 }
                 if (result.IsNotAllowed)
                 {
-                    ModelState.AddModelError(string.Empty, "You need confirm email before login");
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn chưa xác nhận Email");
                     return Page();
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Thông tin đăng nhập sai");
                     return Page();
                 }
             }

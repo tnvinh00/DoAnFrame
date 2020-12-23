@@ -17,7 +17,14 @@
 </head>
 <body id="page-top">
     <header>
-
+        @using Microsoft.AspNetCore.Identity
+        @{
+            string activeAction = ViewContext.RouteData.Values["Controller"].ToString() + "-" + ViewContext.RouteData.Values["Action"].ToString();
+            Func<string, string, string> ActiveClass = (string activePage, string page) =>
+            {
+                return (activePage == page) ? "active" : "";
+            };
+        }
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow fixed-top mb-3 topbar">
             <button class="navbar-toggler btn btn-circle" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -71,15 +78,15 @@
                 </form>
 
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item d-block">
-                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nam">Nam</a>
+                    <li class="nav-item d-block @ActiveClass(activeAction, "Product-Nam")">
+                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nam"><strong>Nam</strong></a>
                     </li>
-                    <li class="nav-item d-block">
-                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nu">Nữ</a>
+                    <li class="nav-item d-block @ActiveClass(activeAction, "Product-Nu")">
+                        <a class="nav-link nav-menu text-dark px-4" asp-area="" asp-controller="Product" asp-action="Nu"><strong>Nữ</strong></a>
                     </li>
-                    <li class="nav-item dropdown" id="menu_partial">
+                    <li class="nav-item dropdown @ActiveClass(activeAction, "Product-Category")" id="menu_partial">
                         <a class="nav-link dropdown-toggle text-dark px-4" href="#" data-toggle="dropdown" aria-expanded="true"
-                           onclick="showMenu('@Url.Action("Menu", "Home", null, Context.Request.Scheme)')">Khác</a>
+                           onclick="showMenu('@Url.Action("Menu", "Home", null, Context.Request.Scheme)')"><strong>Khác</strong></a>
                         <ul class="dropdown-menu dropdown-menu-left shadow show-menu menu-drop">
                             <!--Menu danh mục-->
                         </ul>

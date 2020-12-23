@@ -1,0 +1,89 @@
+﻿@page "/Admin/User/AcceptUser/"
+@model Sky.Areas.Identity.Pages.Admin.User.AcceptUserModel
+@{
+    ViewData["Title"] = "Xác nhận User";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+}
+
+<h4>Danh sách tài khoản chưa xác nhận email</h4>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+<partial name="_StatusMessage" model="@Model.Notification" />
+
+
+<form asp-page="./AcceptUser" method="get" class="form-inline my-4">
+    <div class="form-group">
+        <label>Search</label>
+        <input type="text" class="form-control ml-2" name="SearchString" value="@ViewData["CurrentFilter"]" />
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <a class="btn btn-primary mx-2" asp-page="./AcceptUser">Danh sách đầy đủ</a>
+</form>
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a class="text-decoration-none" asp-page="./AcceptUser" asp-route-sortOrder="@Model.UserNameSort">
+                UserName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>
+            <a class="text-decoration-none" asp-page="./AcceptUser" asp-route-sortOrder="@Model.FullNameSort">
+                FullName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>PhoneNumber</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in @Model.users)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.FullName</td>
+            <td>@user.PhoneNumber</td>
+            <td>@user.Listroles</td>
+            <td>
+                <form method="POST" class="d-inline">
+                    <button name="Input.ID" value="@user.Id" class="btn btn-danger btn-sm"
+                            asp-page="./DeleteUser">
+                        Xóa
+                    </button>
+                </form>
+                <form method="POST" class="d-inline">
+                    <button class="btn btn-success btn-sm"
+                            asp-page="./AcceptUser" asp-route-id="@user.Id">
+                        Xác nhận
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Page("./UserManager", new { pageNumber = _pagenumber });
+    };
+
+    var datapaging = new
+    {
+        currentPage = Model.PageNumber,
+        countPages = Model.TotalPages,
+        generateUrl = generateUrl
+    };
+
+}
+<partial name="_PagingPartial" model="@datapaging" />

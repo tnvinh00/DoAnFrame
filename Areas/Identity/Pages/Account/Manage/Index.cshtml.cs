@@ -94,7 +94,7 @@ namespace Sky.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Hồ sơ của bạn đã được cập nhật!";
             return RedirectToPage();
         }
     }

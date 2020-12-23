@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,15 +10,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Sky.Areas.Identity.Data;
 
-namespace Sky.Areas.Identity.Pages.Admin
+namespace Sky.Areas.Identity.Pages.Admin.User
 {
     [Authorize(Roles = "Admin, Manager")]
-    public class UserManagerModel : PageModel
+    public class AcceptUserModel : PageModel
     {
-        const int USER_PER_PAGE = 15;
+        const int USER_PER_PAGE = 10;
         private readonly UserManager<SkyUser> _userManager;
 
-        public UserManagerModel(UserManager<SkyUser> userManager)
+        public AcceptUserModel(UserManager<SkyUser> userManager)
         {
             _userManager = userManager;
         }
@@ -55,7 +56,7 @@ namespace Sky.Areas.Identity.Pages.Admin
                 PageNumber = 1;
 
             var lusers = (from u in _userManager.Users
-                          where u.EmailConfirmed == true && u.LockoutEnabled == true
+                          where u.EmailConfirmed == false
                           select new UserInList()
                           {
                               Id = u.Id,
@@ -65,7 +66,7 @@ namespace Sky.Areas.Identity.Pages.Admin
                               EmailConfirmed = u.EmailConfirmed,
                               PhoneNumber = u.PhoneNumber,
                               LockoutEnabled = u.LockoutEnabled
-                          });
+                          }); ;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -113,9 +114,6 @@ namespace Sky.Areas.Identity.Pages.Admin
 
             return Page();
         }
-
-
-        //Khóa tài khoản
         public async Task<IActionResult> OnPostAsync(string id)
         {
             if (id == null)
@@ -125,13 +123,13 @@ namespace Sky.Areas.Identity.Pages.Admin
 
             var user = await _userManager.FindByIdAsync(id);
 
-            user.LockoutEnabled = false;
+            user.EmailConfirmed = true;
 
             await _userManager.UpdateAsync(user);
 
-            Notification = "Đã khóa tài khoản " + user.Email;
+            Notification = "Đã xác nhận tài khoản " + user.Email ;
 
-            return RedirectToPage("UserManager");
+            return RedirectToPage("AcceptUser");
         }
     }
 }

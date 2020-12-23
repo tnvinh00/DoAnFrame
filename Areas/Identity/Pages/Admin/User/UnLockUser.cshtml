@@ -1,0 +1,84 @@
+﻿@page "/Admin/User/UnLockUser/"
+@model Sky.Areas.Identity.Pages.Admin.User.LockUserModel
+
+@{
+    ViewData["Title"] = "Khóa User";
+    Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+}
+
+<h4>Danh sách tài khoản đang bị khóa</h4>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+<partial name="_StatusMessage" model="@Model.Notification" />
+
+
+<form asp-page="./UnLockUser" method="get" class="form-inline my-4">
+    <div class="form-group">
+        <label>Tìm kiếm</label>
+        <input type="text" class="form-control ml-2" name="SearchString" value="@ViewData["CurrentFilter"]" />
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <a class="btn btn-primary mx-2" asp-page="./UnLockUser">Danh sách đầy đủ</a>
+</form>
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a class="text-decoration-none" asp-page="./UnLockUser" asp-route-sortOrder="@Model.UserNameSort">
+                UserName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>
+            <a class="text-decoration-none" asp-page="./UnLockUser" asp-route-sortOrder="@Model.FullNameSort">
+                FullName
+                <i class="fas fa-sort"></i>
+            </a>
+        </th>
+        <th>PhoneNumber</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in @Model.users)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.FullName</td>
+            <td>@user.PhoneNumber</td>
+            <td>@user.Listroles</td>
+            <td>
+                <form method="POST" class="d-inline">
+                    <button class="btn btn-success btn-sm"
+                            asp-page="./UnLockUser" asp-route-id="@user.Id">
+                        Mở khóa
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@{
+    Func<int?, string> generateUrl = (int? _pagenumber) =>
+    {
+        return Url.Page("./UserManager", new { pageNumber = _pagenumber });
+    };
+
+    var datapaging = new
+    {
+        currentPage = Model.PageNumber,
+        countPages = Model.TotalPages,
+        generateUrl = generateUrl
+    };
+
+}
+<partial name="_PagingPartial" model="@datapaging" />

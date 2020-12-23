@@ -3,7 +3,43 @@
 @inject SignInManager<SkyUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    string activePage = System.IO.Path.GetFileNameWithoutExtension(ViewContext.ActionDescriptor.DisplayName);
+    string activePage = "";
+    string activeAction = "";
+    string activeColapse = "";
+
+    try
+    {
+        activePage = System.IO.Path.GetFileNameWithoutExtension(ViewContext.ActionDescriptor.DisplayName);
+        activeColapse = ViewContext.RouteData.Values["Area"].ToString() + "-" + System.IO.Path.GetFileNameWithoutExtension(ViewContext.ActionDescriptor.DisplayName);
+    }
+    catch
+    {
+
+    }
+    try
+    {
+        activeAction = ViewContext.RouteData.Values["Controller"].ToString() + "-" + ViewContext.RouteData.Values["Action"].ToString();
+    }
+    catch
+    {
+
+    }
+
+    Func<string, string, string> ActiveColapse = (string activeColapse, string page) =>
+    {
+        return (activeColapse == page) ? "colapse" : "";
+    };
+
+    Func<string, string, string> Show = (string activeColapse, string page) =>
+    {
+        return (activeColapse == page) ? "show" : "";
+    };
+
+    Func<string, string, string> Colapse = (string activeColapse, string page) =>
+    {
+        return (activeColapse == page) ? "" : "colapsed";
+    };
+
     Func<string, string, string> ActiveClass = (string activePage, string page) =>
     {
         return (activePage == page) ? "active" : "";
@@ -30,27 +66,28 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserManage" aria-expanded="true" aria-controls="collapseTwo">
+    <li class="nav-item @ActiveClass(activeColapse, "Identity-UserManager") @ActiveClass(activeColapse, "Identity-UnLockUser") @ActiveClass(activeColapse, "Identity-AcceptUser")">
+        <a class="nav-link @Colapse(activeColapse, "Identity-UserManager") @Colapse(activeColapse, "Identity-UnLockUser") @Colapse(activeColapse, "Identity-AcceptUser")" href="#" data-toggle="collapse" data-target="#collapseUserManage" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-users"></i>
             <span>Quản lý người dùng</span>
         </a>
-        <div id="collapseUserManage" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseUserManage" class="collapse @Show(activeColapse, "Identity-UserManager") @Show(activeColapse, "Identity-UnLockUser") @Show(activeColapse, "Identity-AcceptUser")" 
+             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng</h6>
-                <a class="collapse-item" asp-area="Identity" asp-page="/Admin/User/UserManager">Danh sách tài khoản</a>
-                <a class="collapse-item" asp-area="Identity" asp-page="/Account/Manage/Email">Mở khóa tài khoản</a>
-                <a class="collapse-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Xác nhận tài khoản</a>
+                <a class="collapse-item @ActiveClass(activePage, "UserManager")" asp-area="Identity" asp-page="/Admin/User/UserManager">Danh sách tài khoản</a>
+                <a class="collapse-item @ActiveClass(activePage, "UnLockUser")" asp-area="Identity" asp-page="/Admin/User/UnLockUser">Khóa & Mở khóa</a>
+                <a class="collapse-item @ActiveClass(activePage, "AcceptUser")" asp-area="Identity" asp-page="/Admin/User/AcceptUser">Xác nhận tài khoản</a>
             </div>
         </div>
     </li>
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePhanquyen" aria-expanded="true" aria-controls="collapseTwo">
+    <li class="nav-item @ActiveClass(activeColapse, "Identity-Role") @ActiveClass(activeColapse, "Identity-User")">
+        <a class="nav-link @Colapse(activeColapse, "Identity-Role") @Colapse(activeColapse, "Identity-User")" href="#" data-toggle="collapse" data-target="#collapsePhanquyen" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-user-cog"></i>
             <span>Phân quyền</span>
         </a>
-        <div id="collapsePhanquyen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapsePhanquyen" class="collapse @Show(activeColapse, "Identity-Role") @Show(activeColapse, "Identity-User")" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item @ActiveClass(activePage, "Role")" asp-area="Identity" asp-page="/Admin/Role/Role">Quản lí Role</a>
                 <a class="collapse-item @ActiveClass(activePage, "User")" asp-area="Identity" asp-page="/Admin/Role/User">Gán Role (phân quyền)</a>
@@ -66,73 +103,70 @@
         Quản lý website
     </div>
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="true" aria-controls="collapseTwo">
+    <li class="nav-item @ActiveClass(activeColapse, "Identity-Carousel")">
+        <a class="nav-link @Colapse(activeColapse, "Identity-Carousel")" href="#" data-toggle="collapse" data-target="#collapsePanel" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-images"></i>
             <span>QL Panel</span>
         </a>
-        <div id="collapsePanel" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapsePanel" class="collapse @Show(activeColapse, "Identity-Carousel")" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" asp-page="/Admin/Carousel" asp-area="Identity" ><i class="fas fa-list"></i> Carousel</a>
+                <a class="collapse-item @ActiveClass(activePage, "Carousel")" asp-page="/Admin/Carousel" asp-area="Identity" ><i class="fas fa-list"></i> Carousel</a>
             </div>
         </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct" aria-expanded="true" aria-controls="collapseTwo">
+
+    <li class="nav-item @ActiveClass(activeAction, "Product-Index") @ActiveClass(activeAction, "Category-Index") @ActiveClass(activeAction, "Type-Index")">
+        <a class="nav-link @Colapse(activeAction, "Product-Index") @Colapse(activeAction, "Category-Index") @Colapse(activeAction, "Type-Index")" href="#" data-toggle="collapse" data-target="#collapseProduct" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-tshirt"></i>
             <span>QL Sản phẩm</span>
         </a>
-        <div id="collapseProduct" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseProduct" class="collapse @Show(activeAction, "Product-Index") @Show(activeAction, "Category-Index") @Show(activeAction, "Type-Index")" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" asp-controller="Product" asp-area="" asp-action="Index"><i class="fas fa-tshirt"></i> Sản phẩm</a>
-                <a class="collapse-item" asp-controller="Category" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Danh mục SP</a>
-                <a class="collapse-item" asp-controller="Type" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Loại SP</a>
-                <a class="collapse-item" asp-controller="Product" asp-area="" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm mới SP</a>
-
+                <a class="collapse-item @ActiveClass(activeAction, "Product-Index")" asp-controller="Product" asp-area="" asp-action="Index"><i class="fas fa-tshirt"></i> Sản phẩm</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Category-Index")" asp-controller="Category" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Danh mục SP</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Type-Index")" asp-controller="Type" asp-area="" asp-action="Index"><i class="fas fa-tag"></i> Loại SP</a>
             </div>
         </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder" aria-expanded="true" aria-controls="collapseTwo">
+
+    <li class="nav-item @ActiveClass(activeAction, "Order-Manage") @ActiveClass(activeAction, "Order-AcceptOrder") @ActiveClass(activeAction, "Order-DeleteOrderCancel")">
+        <a class="nav-link @Colapse(activeAction, "Order-Manage") @Colapse(activeAction, "Order-AcceptOrder") @Colapse(activeAction, "Order-DeleteOrderCancel")" href="#" data-toggle="collapse" data-target="#collapseOrder" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-shopping-bag"></i>
             <span>QL Đơn hàng</span>
         </a>
-        <div id="collapseOrder" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseOrder" class="collapse @Show(activeAction, "Order-Manage") @Show(activeAction, "Order-AcceptOrder") @Show(activeAction, "Order-DeleteOrderCancel")" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="Manage"><i class="fas fa-list"></i> DS đơn hàng</a>
-                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="AcceptOrder"><i class="fas fa-check-circle"></i> Duyệt đơn hàng mới</a>
-                <a class="collapse-item" asp-controller="Order" asp-area="" asp-action="DeleteOrderCancel"><i class="fas fa-trash"></i> Xóa ĐH đã hủy</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Order-Manage")" asp-controller="Order" asp-area="" asp-action="Manage"><i class="fas fa-list"></i> DS đơn hàng</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Order-AcceptOrder")" asp-controller="Order" asp-area="" asp-action="AcceptOrder"><i class="fas fa-check-circle"></i> Duyệt đơn hàng mới</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Order-DeleteOrderCancel")" asp-controller="Order" asp-area="" asp-action="DeleteOrderCancel"><i class="fas fa-trash"></i> Xóa ĐH đã hủy</a>
             </div>
         </div>
     </li>
-    <li class="nav-item">
+    @*<li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePost" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-newspaper"></i>
             <span>QL Bài đăng</span>
         </a>
         <div id="collapsePost" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" asp-controller="Category" asp-area="Admin"><i class="fas fa-list"></i> Danh sách</a>
-                <a class="collapse-item" asp-controller="Post" asp-area="Admin" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm bài viết</a>
+                <a class="collapse-item @ActiveClass(activePage, "Artical")" asp-controller="Category" asp-area="Admin"><i class="fas fa-list"></i> Danh sách</a>
+                <a class="collapse-item @ActiveClass(activePage, "AddArtical")" asp-controller="Post" asp-area="Admin" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm bài viết</a>
 
             </div>
         </div>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStatis" aria-expanded="true" aria-controls="collapseTwo">
+    </li>*@
+    <li class="nav-item @ActiveClass(activeAction, "Report-Index")">
+        <a class="nav-link @Colapse(activeAction, "Report-Index")" href="#" data-toggle="collapse" data-target="#collapseStatis" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-chart-bar"></i>
             <span>Thống kê</span>
         </a>
-        <div id="collapseStatis" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseStatis" class="collapse @Show(activeAction, "Report-Index")" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" asp-controller="Report" asp-area="" asp-action="Index"><i class="fas fa-chart-bar"></i> Doanh thu</a>
-                <a class="collapse-item" asp-controller="Post" asp-area="Admin" asp-action="Index"><i class="fas fa-list"></i> Sản phẩm</a>
+                <a class="collapse-item @ActiveClass(activeAction, "Report-Index")" asp-controller="Report" asp-area="" asp-action="Index"><i class="fas fa-chart-bar"></i> Doanh thu</a>
 
             </div>
         </div>
     </li>
-
-
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -143,3 +177,6 @@
     </div>
 </ul>
 <!-- End of Sidebar -->
+
+@section Scripts{ 
+}

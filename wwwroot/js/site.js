@@ -30,7 +30,14 @@ addtoCart2 = form => {
             success: function (res) {
                 $.notify({
                     message: res,
-                    type: 'success'
+                }, {
+                    offset: {
+                        y: 80,
+                        x: 20,
+                    },
+                    delay: 500,
+                    type: 'success',
+                    url_target: '_self',
                 });
             },
             error: function (err) {
@@ -44,6 +51,28 @@ addtoCart2 = form => {
     }
 }
 
+showModal = form => {
+    try {
+        $.ajax({
+            type: 'POST',
+            url: form.action,
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                $('#form-modal .modal-body').html(res);
+                $('#form-modal').modal('show');
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        })
+        //to prevent default form submit event
+        return false;
+    } catch (ex) {
+        console.log(ex)
+    }
+}
 
 /*Mua hàng thành công*/
 success = (url) => {

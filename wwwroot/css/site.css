@@ -4,6 +4,10 @@
     transition-delay: 0.05s;
 }
 
+.navbar-nav > .active > .nav-menu {
+    background-color: #e5e7ef !important;
+}
+
 .col-xs-6 {
     width: 50%;
 }

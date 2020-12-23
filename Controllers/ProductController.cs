@@ -35,7 +35,7 @@ namespace Sky.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        [Authorize]
+        
         [NoDirectAccess]
         public async Task<IActionResult> AddtoCart(int? id)
         {
@@ -85,7 +85,7 @@ namespace Sky.Controllers
         }
 
 
-        [Authorize]
+        
         [NoDirectAccess]
         public async Task<IActionResult> AddtoCart2(string id, string quantity)
         {

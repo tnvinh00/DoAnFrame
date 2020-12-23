@@ -30,7 +30,8 @@ namespace Sky.Areas.Identity.Pages.Admin
         public List<int> percent = new List<int>();
         public List<string> lable = new List<string>();
 
-        public void OnGet()
+        public void OnPost() => NotFound();
+        public async Task OnGetAsync()
         {
             var user = _context.Roles.Where(c => c.Name == "User").FirstOrDefault();
             var admin = _context.Roles.Where(c => c.Name == "Admin").FirstOrDefault();
@@ -62,7 +63,10 @@ namespace Sky.Areas.Identity.Pages.Admin
             lable.Add("Manager (" + skyAppDbContext3.Count() + ")");
 
             //
+            var curr = await _userManager.GetUserAsync(User);
 
+            var roles = await _userManager.GetRolesAsync(curr);
+            ViewData["Role"] = string.Join(",", roles.ToList());
         }
     }
 }

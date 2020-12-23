@@ -1,13 +1,14 @@
-﻿@page
+﻿@page "/Admin/Role/AddUserRole"
 @model Sky.Areas.Identity.Pages.Role.AddUserRoleModel
 @{
     ViewData["Title"] = "Cập nhật role cho User";
     Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    //Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
 <h4>@ViewData["Title"]</h4>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-9">
         <p>Chọn các role gán cho <strong>@Model.Input.Name</strong></p>
         <form method="post">
             <partial name="_StatusMessage" model="@Model.StatusMessage" />
@@ -21,9 +22,10 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Input.ID">
             <input type="hidden" asp-for="IsConfirmed">
-            <button type="submit" class="btn btn-danger">Cập nhật</button>
-            <a class="btn btn-primary" asp-page="./User">Danh sách</a>
+            <button type="submit" class="btn btn-success">Lưu</button>
+            <a class="btn btn-primary" asp-page="./User">Trở lại</a>
         </form>
+        
     </div>
 </div>
 
@@ -35,12 +37,9 @@
             padding-top: 8px !important;
             padding-bottom: 8px !important;
         }
-        .ms-choice{
+        .ms-choice {
             height: 42px !important;
-        }
-        button:focus {
-            outline: none !important;
-            box-shadow: none !important;
+            border: 1px solid black !important;
         }
     </style>
     <script>

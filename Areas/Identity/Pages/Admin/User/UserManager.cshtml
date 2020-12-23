@@ -1,18 +1,24 @@
-﻿@page
+﻿@page "/Admin/User/UserManager"
 @model Sky.Areas.Identity.Pages.Admin.UserManagerModel
+
+@inject UserManager<SkyUser> UserManager
+
 @{
     ViewData["Title"] = "Danh sách User";
     Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
+    var tempuser = UserManager.GetUserId(User);
 }
 
 <h4>@ViewData["Title"]</h4>
 
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
+<partial name="_StatusMessage" model="@Model.Notification" />
+
 
 
 <form asp-page="./UserManager" method="get" class="form-inline my-4">
     <div class="form-group">
-        <label>Search</label>
+        <label>Tìm kiếm</label>
         <input type="text" class="form-control ml-2" name="SearchString" value="@ViewData["CurrentFilter"]" />
     </div>
     <div class="input-group-append">
@@ -37,39 +43,45 @@
                 <i class="fas fa-sort"></i>
             </a>
         </th>
-        <th>PhoneNumber</th>
-        <th>Status</th>
-        <th>EmailConfirmed</th>
+        <th>Số điện thoại</th>
+        <th>CMND</th>
         <th>Roles</th>
-        <th>Actions</th>
+        <th></th>
     </tr>
-    @foreach (var user in @Model.users)
+    @foreach (var user in Model.users)
     {
-        <tr>
-            <td>@user.UserName</td>
-            <td>@user.FullName</td>
-            <td>@user.PhoneNumber</td>
-            <td>@user.LockoutEnabled</td>
-            <td>@user.EmailConfirmed</td>
-            <td>@user.Listroles</td>
-            <td>
-                <form method="POST" class="d-inline">
-                    <button name="Input.ID" value="@user.Id" class="btn btn-success btn-sm"
-                            asp-page="./EditUser">
-                        Sửa
-                    </button>
-                </form>
-                <form method="POST" class="d-inline">
-                    <button name="Input.ID" value="@user.Id" class="btn btn-danger btn-sm"
-                            asp-page="./DeleteUser">
-                        Xóa
-                    </button>
-                </form>
-            </td>
-        </tr>
+        if (tempuser != user.Id)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.FullName</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.CMND</td>
+                <td>@user.Listroles</td>
+                <td>
+                    <form method="POST" class="d-inline">
+                        <button name="Input.ID" value="@user.Id" class="btn btn-success btn-sm"
+                                asp-page="./EditUser">
+                            Sửa
+                        </button>
+                    </form>
+                    <form method="POST" class="d-inline">
+                        <button name="Input.ID" value="@user.Id" class="btn btn-danger btn-sm"
+                                asp-page="./DeleteUser">
+                            Xóa
+                        </button>
+                    </form>
+                    <form method="POST" class="d-inline">
+                        <button class="btn btn-secondary text-white btn-sm"
+                                asp-page="./UserManager" asp-route-id="@user.Id">
+                            Khóa
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
     }
 </table>
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

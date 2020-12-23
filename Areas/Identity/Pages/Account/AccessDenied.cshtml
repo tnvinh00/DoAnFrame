@@ -7,7 +7,7 @@
 @inject UserManager<SkyUser> UserManager
 
 @{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = "Truy cập bị từ chối";
     var currentUser = await UserManager.GetUserAsync(User);
     var isAdmin = currentUser != null && (await UserManager.IsInRoleAsync(currentUser, "Admin") || await UserManager.IsInRoleAsync(currentUser, "Manager"));
 

@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Sky.Areas.Identity.Data;
+using static Sky.Data.Helper;
 
 namespace Sky.Areas.Identity.Pages.Role
 {
     [Authorize(Roles = "Manager")]
+
     public class AddUserRoleModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -51,8 +53,6 @@ namespace Sky.Areas.Identity.Pages.Role
 
         public async Task<IActionResult> OnPost()
         {
-
-
             var user = await _userManager.FindByIdAsync(Input.ID);
             if (user == null)
             {

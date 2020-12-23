@@ -1,11 +1,12 @@
-﻿@page "/admin/"
+﻿@page "/Admin/"
 @model Sky.Areas.Identity.Pages.Admin.AdminModel
 @{
     Layout = "~/Areas/Identity/Pages/Admin/_AdminLayout.cshtml";
     ViewData["Title"] = "Admin";
 }
 
-<p class="text-center h3 my-5">Đây là trang quản lý của Meow</p>
+<p class="text-center h3 mt-5"><strong>Trang quản lý webssite Meow</strong></p>
+<p class="text-center h6 my-3">Bạn đang truy cập với quyền của @ViewData["Role"]</p>
 
 <div class="d-flex justify-content-center">
     <div class="col-xl-4 col-lg-5 mt-2">

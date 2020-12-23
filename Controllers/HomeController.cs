@@ -68,7 +68,6 @@ namespace Sky.Controllers
             return View();
         }
 
-        [NoDirectAccess]
         public IActionResult BestSale()
         {
             var sale = _context.OrderDetailDbSet

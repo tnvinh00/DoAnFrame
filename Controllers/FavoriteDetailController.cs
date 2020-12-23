@@ -56,7 +56,7 @@ namespace Sky.Controllers
             return View(await skyAppDbContext.Take(5).ToListAsync());
         }
 
-        [Authorize]
+        
         [NoDirectAccess]
         public async Task<IActionResult> AddtoFavo(int? id)
         {

@@ -136,7 +136,12 @@ namespace Sky.Areas.Identity.Pages.Account
                             + $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
                         IsBodyHtml = true
                     };
-                    client.Send(message);
+                    try
+                    {
+                        client.Send(message);
+                    }
+                    catch { }
+                    
                     //
 
 

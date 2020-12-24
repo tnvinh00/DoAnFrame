@@ -45,7 +45,14 @@
     <header>
         @using Microsoft.AspNetCore.Identity
         @{
-            string activeAction = ViewContext.RouteData.Values["Controller"].ToString() + "-" + ViewContext.RouteData.Values["Action"].ToString();
+            string activeAction = "";
+            try
+            {
+                activeAction = ViewContext.RouteData.Values["Controller"].ToString() + "-" + ViewContext.RouteData.Values["Action"].ToString();
+            }
+            catch { }
+
+
             Func<string, string, string> ActiveClass = (string activePage, string page) =>
             {
                 return (activePage == page) ? "active" : "";

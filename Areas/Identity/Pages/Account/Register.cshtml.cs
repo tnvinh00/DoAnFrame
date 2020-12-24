@@ -46,29 +46,29 @@ namespace Sky.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Bạn phải nhập tên")]
             [DataType(DataType.Text)]
-            [Display(Name = "Full Name")]
+            [Display(Name = "Tên đầy đủ")]
             public string FullName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Bạn cần nhập CMND")]
             [DataType(DataType.Text)]
             [Display(Name = "CMND")]
             public string CMND { get; set; }
 
             [Required]
-            [Display(Name = "Email")]
+            [Display(Name = "Địa chỉ Email")]
             [EmailAddress(ErrorMessage = "Đây không phải là email hợp lệ")]
             public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "Mật khẩu tối thiểu 6 kí tự", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Nhập lại mật khẩu")]
             [Compare("Password", ErrorMessage = "2 mật khẩu phải giống nhau")]
             public string ConfirmPassword { get; set; }
         }
@@ -140,7 +140,10 @@ namespace Sky.Areas.Identity.Pages.Account
                     {
                         client.Send(message);
                     }
-                    catch { }
+                    catch {
+                        ModelState.AddModelError(string.Empty, "Đã có lỗi khi gửi mail xác nhận, liên hệ admin để được xác nhận!");
+                        return Page();
+                    }
                     
                     //
 

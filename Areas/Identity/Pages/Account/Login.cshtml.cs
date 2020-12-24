@@ -48,11 +48,11 @@ namespace Sky.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Bạn chưa nhập Email")]
+            [EmailAddress(ErrorMessage = "Email không hợp lệ")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Bạn chưa nhập mật khẩu")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -86,6 +86,15 @@ namespace Sky.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (returnUrl == null)
+            {
+                Status = "";
+            }
+            else
+            {
+                Status = "Bạn cần đăng nhập để tiếp tục";
+            }
+
             returnUrl = returnUrl ?? Url.Content("~/");
 
             if (ModelState.IsValid)
@@ -93,11 +102,13 @@ namespace Sky.Areas.Identity.Pages.Account
                   
                 // This doesn't count login failures towards account lockout
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user.LockoutEnabled == false)
+
+                if(user.LockoutEnabled == false)
                 {
                     ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị khóa");
                     return Page();
                 }
+
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
@@ -106,11 +117,6 @@ namespace Sky.Areas.Identity.Pages.Account
 
                     if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager"))
                         return LocalRedirect("~/admin");
-
-                    if (returnUrl != null)
-                    {
-                        return LocalRedirect(returnUrl);
-                    }
 
                     return LocalRedirect(returnUrl);
                 }
